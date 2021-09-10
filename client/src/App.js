@@ -1,7 +1,7 @@
-import {
-  useState,
-  useEffect
-} from "react";
+// import {
+//   useState,
+//   useEffect
+// } from "react";
 
 import {
   BrowserRouter as Router,
@@ -14,32 +14,39 @@ import {
 } from '@material-ui/core'
 
 import './App.css';
-import theme from './Theme/theme.js'
+import Header from './Components/Header/Header';
+import Footer from './Components/Footer/Footer';
+import Home from './Pages/Home';
+import Login from './Pages/Login';
+import SearchPage from './Pages/SearchPage';
+import UserRoutes from './Components/Routes/UserRoutes';
+import theme from './Theme/theme.js';
 
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    fetch('/hello')
-      .then(res => res.json())
-      .then(data => setCount(data.count))
-  }, []);
-
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <div className="App">
-          <Switch>
-            <Route path="/testing">
-              <h1>Test route</h1>
-            </Route>
-            <Route path="/">
-              <h1>Page Count: {count}</h1>
-            </Route>
-          </Switch>
-        </div>
+        <Header />
+        <Switch>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+
+          <Route path="/search">
+            <SearchPage />
+          </Route>
+
+          <Route path="/:username">
+            <UserRoutes />
+          </Route>
+          
+          <Route exact path="/">
+            <Home />
+          </Route>
+        </Switch>
+        <Footer />
       </Router>
     </ThemeProvider>
   );
