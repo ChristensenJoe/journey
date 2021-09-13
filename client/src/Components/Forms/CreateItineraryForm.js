@@ -1,17 +1,17 @@
 import {
     Button,
     makeStyles
-  } from '@material-ui/core' 
+} from '@material-ui/core'
 
-import {useState } from 'react'
+import { useState } from 'react'
 
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 function CreateItineraryForm({ user }) {
     const [itineraryFormData, setItineraryFormData] = useState({
-        name:"",
-        description:"",
-        category:"",
+        name: "",
+        description: "",
+        category: "",
         is_private: false
     })
 
@@ -26,8 +26,8 @@ function CreateItineraryForm({ user }) {
             user_id: user.id
         }
         for (const key in itineraryFormData) {
-            if (itineraryFormData[key] !== "" && (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
-              newItinerary[key] = itineraryFormData[key]
+            if (itineraryFormData[key] !== "" || (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
+                newItinerary[key] = itineraryFormData[key]
             }
         }
         console.log(newItinerary)
@@ -38,61 +38,54 @@ function CreateItineraryForm({ user }) {
             },
             body: JSON.stringify(newItinerary)
         })
-        if(response.ok) {
+        if (response.ok) {
             response.json()
-            .then(data => {
-                history.push(`/${user.username}/${itineraryFormData.name.toLowerCase().split(' ').join("-")}`)
-            })
-        }        
+                .then(data => {
+                    history.push(`/${user.username}/${itineraryFormData.name.toLowerCase().split(' ').join("-")}`)
+                })
+        }
     }
 
     function handleFormChange(e) {
-        if(e.target.name === "is_private") {
-               setItineraryFormData((itineraryFormData) => ({
-            ...itineraryFormData,
-            [e.target.name]: !itineraryFormData.is_private
-            })
-            )
+        const value = (e.target.type === "checkbox" ?
+                       e.target.checked : e.target.value)
 
-        }
-        else {
-            setItineraryFormData((itineraryFormData) => ({
-                ...itineraryFormData,
-                [e.target.name]: e.target.value
-            })
-            )
-        }
+        setItineraryFormData((itineraryFormData) => ({
+            ...itineraryFormData,
+            [e.target.name]: value
+        })
+        )
     }
 
     return (
-         <form onSubmit={handlePosteItinerary}> 
-             <input
-             name="name"
-             type="text"
-             onChange = {handleFormChange}
-             value={itineraryFormData.name}
-             /> 
-             <input
-             name="description"
-             type="text"
-             onChange = {handleFormChange}
-             value={itineraryFormData.description}
-             />
-             <input
-             type="text"
-             name="category"
-             onChange = {handleFormChange}
-             value={itineraryFormData.category}
+        <form onSubmit={handlePosteItinerary}>
+            <input
+                name="name"
+                type="text"
+                onChange={handleFormChange}
+                value={itineraryFormData.name}
             />
             <input
-            type="checkbox"
-            name="is_private"
-            onChange = {handleFormChange}
-            checked={itineraryFormData.is_private}
+                name="description"
+                type="text"
+                onChange={handleFormChange}
+                value={itineraryFormData.description}
+            />
+            <input
+                type="text"
+                name="category"
+                onChange={handleFormChange}
+                value={itineraryFormData.category}
+            />
+            <input
+                type="checkbox"
+                name="is_private"
+                onChange={handleFormChange}
+                checked={itineraryFormData.is_private}
             />
             <label>Would you like to make this public?</label>
             <Button type="submit">Create Itinerary</Button>
-         </form>
+        </form>
     )
 }
 

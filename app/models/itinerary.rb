@@ -4,5 +4,5 @@ class Itinerary < ApplicationRecord
 
     validates :name, presence: true
     validates :description, presence: true
-    validates :is_private, presence: true
+    validates :is_private, inclusion: {in: [true, false]}
 end
