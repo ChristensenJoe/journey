@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,14 +20,31 @@ import theme from './Theme/theme.js';
 
 
 function App() {
+  const [user, setUser] = useState(false)
+
+  useEffect(()=> {
+    fetch("/me")
+    .then((r)=> {
+      if (r.ok) {
+        r.json()
+        .then((user) => setUser(user))
+      }
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Header />
+        <Header 
+          user={user}
+          setUser={setUser}
+        />
         <Switch>
           <Route exact path="/login">
-            <Login />
+            <Login 
+              user={user}
+              setUser={setUser}
+            />
           </Route>
 
           <Route path="/search">

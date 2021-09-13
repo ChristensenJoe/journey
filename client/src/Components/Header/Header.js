@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useState } from "react";
 import {
   AppBar,
@@ -36,12 +36,23 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function Header() {
+function Header({ user, setUser }) {
+  const history = useHistory();
+  const classes = useStyles();
+  
   const [searchOpen, setSearchOpen] = useState(false);
-  const classes = useStyles()
 
   function renderSearchOpen() {
     setSearchOpen(()=>!searchOpen)
+  }
+
+  function logoutUser() {
+    fetch("/logout", {
+      method: "DELETE"
+    })
+    setUser(false);
+    history.push(`/`);
+    console.log("user has been logged out!")
   }
 
   return(
@@ -52,7 +63,10 @@ function Header() {
             <img src={logo} alt="journey-logo" className={classes.logo} />
           </Container>
           <Typography variant="h4" color="contrastText" onClick={renderSearchOpen}>Search</Typography>
-          <Typography variant="h4" color="contrastText" component={NavLink} to="/login" className={classes.headerItems}>Login</Typography>
+          {user ? 
+            <Typography variant="h4" color="contrastText" className={classes.headerItems} onClick={logoutUser}>Logout</Typography> :
+            <Typography variant="h4" color="contrastText" component={NavLink} to="/login" className={classes.headerItems}>Login</Typography>
+          }
         </Toolbar>
       </AppBar>
       {searchOpen ? <input type="text" placeholder="Where would you like to go?" className={classes.searchInput} /> : null}

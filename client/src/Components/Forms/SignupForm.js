@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -44,12 +46,57 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       background: 'none'
     }
-  },
-  
+  }
 }));
 
-function SignupForm({ toggleLogin }) {
-  const classes = useStyles()
+function SignupForm({ setUser, toggleLogin }) {
+  const classes = useStyles();
+  const history = useHistory();
+  const [createFormData, setCreateFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    password_confirmation: ""
+  });
+
+  function onHandleChangeForm(event) {
+    setCreateFormData((createFormData)=>({
+      ...createFormData,
+      [event.target.name]: event.target.value
+    }))
+  }
+
+  async function onSubmitCreateForm(e) {
+    e.preventDefault()
+
+    let newUser = {}
+
+    for (const key in createFormData) {
+      if (createFormData[key] !== "") {
+        newUser[key] = createFormData[key]
+      } 
+    }
+
+    const response = await fetch("/signup",{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newUser)
+    })
+
+    if (response.ok) {
+      response.json()
+      .then(data=> {
+        setUser(data)
+        history.push(`/${data.username}`)
+      })
+    }
+    else {
+      response.json()
+      .then(data=>alert(data.errors))
+    }
+  }
 
   return(
     <Box>
@@ -65,28 +112,77 @@ function SignupForm({ toggleLogin }) {
         noValidate 
         autoComplete="off" 
         className={classes.gridContainer}
+        onSubmit={onSubmitCreateForm}
       >
         <Container className={classes.inputContainer}>
-          <label for="create-username" className={classes.inputLabel}>Username</label>
-          <input type="text" name="create-username" className={classes.input} required />
+          <label 
+            htmlFor="username" 
+            className={classes.inputLabel}
+          >
+            Username
+          </label>
+          <input 
+            type="text" 
+            name="username"
+            value={createFormData.username}
+            className={classes.input} 
+            onChange={onHandleChangeForm} 
+            required 
+          />
         </Container>
         <Container className={classes.inputContainer}>
-          <label for="create-email" className={classes.inputLabel}>Email</label>
-          <input type="text" name="create-email" className={classes.input} required />
+          <label 
+            htmlFor="email" 
+            className={classes.inputLabel}
+          >
+            Email
+          </label>
+          <input 
+            type="text" 
+            name="email"
+            value={createFormData.email}
+            className={classes.input} 
+            onChange={onHandleChangeForm} 
+            required 
+          />
         </Container>
         <Container className={classes.inputContainer}>
-          <label for="create-password" className={classes.inputLabel}>Password</label>
-          <input type="text" name="create-password" className={classes.input} required />
+          <label 
+            htmlFor="password" 
+            className={classes.inputLabel}
+          >
+            Password
+          </label>
+          <input 
+            type="password" 
+            name="password"
+            value={createFormData.password}
+            className={classes.input} 
+            onChange={onHandleChangeForm} 
+            required 
+          />
         </Container>
         <Container className={classes.inputContainer}>
-          <label for="create-password-confirmation" className={classes.inputLabel}>Confirm Password</label>
-          <input type="text" name="create-password-confirmation" className={classes.input} required />
+          <label 
+            htmlFor="password_confirmation" 
+            className={classes.inputLabel}
+          >
+            Confirm Password
+          </label>
+          <input 
+            type="password" 
+            name="password_confirmation"
+            value={createFormData.password_confirmation}
+            className={classes.input} 
+            onChange={onHandleChangeForm} 
+            required 
+          />
         </Container>
         <Button 
           variant="contained" 
           type="submit" 
           color="secondary" 
-          disableElevation 
+          disableElevation
           className={classes.createButton}
         >
           Create

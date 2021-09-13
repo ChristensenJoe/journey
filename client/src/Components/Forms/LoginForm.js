@@ -67,11 +67,11 @@ function LoginForm({ toggleLogin }) {
         className={classes.gridContainer}
       >
         <Container className={classes.inputContainer}>
-          <label for="login-username" className={classes.inputLabel}>Username</label>
+          <label htmlFor="login-username" className={classes.inputLabel}>Username</label>
           <input type="text" name="login-username" className={classes.input} required />
         </Container>
         <Container className={classes.inputContainer}>
-          <label for="login-password" className={classes.inputLabel}>Password</label>
+          <label htmlFor="login-password" className={classes.inputLabel}>Password</label>
           <input type="text" name="login-password" className={classes.input} required />
         </Container>
         <Button 

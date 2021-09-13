@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function Login() {
+function Login({ user, setUser }) {
   const [showLogin, setShowLogin] = useState(true)
   const classes=useStyles()
 
@@ -44,8 +44,14 @@ function Login() {
         </Grid>
         <Grid item xs={12} sm={6} className={classes.gridContainer}>
           {showLogin ? 
-            <LoginForm toggleLogin={toggleLogin}/> : 
-            <SignupForm toggleLogin={toggleLogin} />
+            <LoginForm 
+              setUser={setUser}
+              toggleLogin={toggleLogin}
+            /> : 
+            <SignupForm 
+              setUser={setUser}
+              toggleLogin={toggleLogin} 
+            />
           }
         </Grid>
       </Grid>
