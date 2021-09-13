@@ -7,7 +7,7 @@ import ProfilePage from '../../Pages/ProfilePage';
 import ItineraryPage from '../../Pages/ItineraryPage';
 import AllItinerariesPage from '../../Pages/AllItinerariesPage';
 
-function UserRoutes() {
+function UserRoutes({ user }) {
 
   return(
     <Switch>
@@ -20,7 +20,9 @@ function UserRoutes() {
       </Route>
 
       <Route exact path="/:username">
-        <ProfilePage />
+        <ProfilePage 
+          user={user}
+        />
       </Route>
     </Switch>
   )

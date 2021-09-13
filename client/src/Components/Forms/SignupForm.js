@@ -59,10 +59,10 @@ function SignupForm({ setUser, toggleLogin }) {
     password_confirmation: ""
   });
 
-  function onHandleChangeForm(event) {
+  function onHandleChangeForm(e) {
     setCreateFormData((createFormData)=>({
       ...createFormData,
-      [event.target.name]: event.target.value
+      [e.target.name]: e.target.value
     }))
   }
 

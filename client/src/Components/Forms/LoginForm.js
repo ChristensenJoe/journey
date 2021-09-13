@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+
 import {
   Box,
   Typography,
@@ -48,8 +51,52 @@ const useStyles = makeStyles(theme => ({
   
 }));
 
-function LoginForm({ toggleLogin }) {
-  const classes = useStyles()
+function LoginForm({ setUser, toggleLogin }) {
+  const classes = useStyles();
+  const history = useHistory();
+  
+  const [loginFormData, setLoginFormData] = useState({
+    username: "",
+    password: ""
+  })
+
+  function onHandleChangeForm(e) {
+    setLoginFormData((loginFormData)=>({
+      ...loginFormData,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  async function onSubmitLoginForm(e) {
+    e.preventDefault()
+
+    let newUser = {}
+
+    for (const key in loginFormData) {
+      if (loginFormData[key] !== "") {
+        newUser[key] = loginFormData[key]
+      } 
+    }
+
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newUser)
+    })
+
+    if (response.ok) {
+      response.json()
+      .then(data=>{
+        setUser(data)
+        history.push(`/${data.username}`)
+      })
+    } else {
+      response.json()
+      .then(data=> alert(data.errors))
+    }
+  }
 
   return(
     <Box>
@@ -64,15 +111,40 @@ function LoginForm({ toggleLogin }) {
       <form 
         noValidate 
         autoComplete="off" 
+        onSubmit={onSubmitLoginForm}
         className={classes.gridContainer}
       >
         <Container className={classes.inputContainer}>
-          <label htmlFor="login-username" className={classes.inputLabel}>Username</label>
-          <input type="text" name="login-username" className={classes.input} required />
+          <label 
+            htmlFor="username" 
+            className={classes.inputLabel}
+          >
+            Username
+          </label>
+          <input 
+            type="text" 
+            name="username" 
+            value={loginFormData.username}
+            className={classes.input} 
+            onChange={onHandleChangeForm}
+            required 
+          />
         </Container>
         <Container className={classes.inputContainer}>
-          <label htmlFor="login-password" className={classes.inputLabel}>Password</label>
-          <input type="text" name="login-password" className={classes.input} required />
+          <label 
+            htmlFor="password" 
+            className={classes.inputLabel}
+          >
+            Password
+          </label>
+          <input 
+            type="password" 
+            name="password" 
+            value={loginFormData.password}
+            className={classes.input} 
+            onChange={onHandleChangeForm}
+            required 
+          />
         </Container>
         <Button 
           variant="contained" 

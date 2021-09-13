@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function Login({ user, setUser }) {
+function Login({ setUser }) {
   const [showLogin, setShowLogin] = useState(true)
   const classes=useStyles()
 

@@ -42,7 +42,6 @@ function App() {
         <Switch>
           <Route exact path="/login">
             <Login 
-              user={user}
               setUser={setUser}
             />
           </Route>
@@ -52,7 +51,9 @@ function App() {
           </Route>
 
           <Route path="/:username">
-            <UserRoutes />
+            <UserRoutes 
+              user={user}
+            />
           </Route>
           
           <Route exact path="/">
