@@ -78,6 +78,10 @@ function SignupForm({ toggleLogin }) {
           <label for="create-password" className={classes.inputLabel}>Password</label>
           <input type="text" name="create-password" className={classes.input} required />
         </Container>
+        <Container className={classes.inputContainer}>
+          <label for="create-password-confirmation" className={classes.inputLabel}>Confirm Password</label>
+          <input type="text" name="create-password-confirmation" className={classes.input} required />
+        </Container>
         <Button 
           variant="contained" 
           type="submit" 
