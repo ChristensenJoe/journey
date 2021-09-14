@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme=> ({
   },
   profileImg: {
     height: '120px',
-    width: 'auto',
+    width: '120px',
     borderRadius: '100px',
     marginBottom: '40px'
   },
@@ -46,43 +46,29 @@ function ProfilePage({ user, setUser }) {
   const { username } = useParams();
   const [openCreate, setOpenCreate] = useState(false);
   const [openEditProfile, setOpenEditProfile] = useState(false);
-  const [pageUserData, setPageUserData] = useState({});
   const isMyAccount = user.username === username;
 
-  useEffect(()=>{
-    fetch('/me')
-    .then(res=>res.json())
-    .then(setPageUserData)
-  },[])
-
-  function handleClickOpenCreate() {
-    setOpenCreate(true)
+  function handleCreateDialog() {
+    setOpenCreate((openCreate) => !openCreate)
   }
 
-  function handleCloseCreate() {
-    setOpenCreate(false)
-  }
-
-  function handleClickOpenEditProfile() {
-    setOpenEditProfile(true)
-  }
-
-  function handleCloseEditProfile() {
-    setOpenEditProfile(false)
+  function handleEditProfileDialog() {
+    setOpenEditProfile((openEditProfile) => !openEditProfile)
   }
   
   return(
     <Grid container>
       <CreateItineraryDialog 
-        handleClose={handleCloseCreate} 
+        handleChangeCreate={handleCreateDialog} 
         open={openCreate}
         user={user}
       />
       
       <EditProfileDialog 
-        handleClose={handleCloseEditProfile} 
+        handleChangeEditProfile={handleEditProfileDialog} 
         open={openEditProfile}
         user={user}
+        setUser={setUser}
       />
 
       <Grid 
@@ -95,20 +81,20 @@ function ProfilePage({ user, setUser }) {
           className={classes.profileMainSection}
         >
           <img 
-            src={pageUserData.profile_img} 
+            src={user.profile_img} 
             className={classes.profileImg} 
           />
           <Typography 
             variant="h2" 
             gutterBottom
           >
-            {pageUserData.username}
+            {user.username}
           </Typography>
           <Typography 
             variant="body1"
             gutterBottom
           >
-            {pageUserData.bio}
+            {user.bio}
           </Typography>
           <Typography 
             variant="body1"
@@ -121,7 +107,7 @@ function ProfilePage({ user, setUser }) {
             variant="contained"
             disableElevation
             className={classes.editLink}
-            onClick={handleClickOpenEditProfile}
+            onClick={handleEditProfileDialog}
           >
             Edit Profile
           </Button>}
@@ -132,7 +118,7 @@ function ProfilePage({ user, setUser }) {
           variant="contained" 
           disableElevation 
           className={classes.addItineraryButton}
-          onClick={handleClickOpenCreate}
+          onClick={handleCreateDialog}
         >
           Add New Itinerary
         </Button>}

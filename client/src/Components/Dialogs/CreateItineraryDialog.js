@@ -47,7 +47,7 @@ submitButton: {
 }
 }))
 
-function CreateItineraryDialog({ handleClose, open, user }) {
+function CreateItineraryDialog({ handleChangeCreate, open, user }) {
     const classes = useStyles();
 
     const [itineraryFormData, setItineraryFormData] = useState({
@@ -69,9 +69,14 @@ function CreateItineraryDialog({ handleClose, open, user }) {
         for (const key in itineraryFormData) {
             if (itineraryFormData[key] !== "" || (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
                 newItinerary[key] = itineraryFormData[key]
+                if(key === "name") {
+                    newItinerary[key] = newItinerary[key].toLowerCase();
+                }
             }
         }
-        const response = await fetch('/itinerary', {
+
+
+        const response = await fetch('/itineraries', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -98,7 +103,7 @@ function CreateItineraryDialog({ handleClose, open, user }) {
     return (
         <Dialog 
             open={open}
-            onClose={handleClose}
+            onClose={handleChangeCreate}
         >
             <Container 
                 className={classes.container}

@@ -25,15 +25,19 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function ItineraryListItem() {
+function ItineraryListItem({name, location, content, time, categories}) {
   const classes=useStyles()
 
   return(
     <Box className={classes.container}>
-      <Typography className={classes.category} variant="h4">Food</Typography>
-      <Typography variant="h5">Happy Bones</Typography>
-      <Typography variant="body1" noWrap>Stylish, minimalist coffee shop with specialty coffee, local art & global publications on display.</Typography>
-      <Typography variant="body1" className={classes.time}>Time: Saturday, Dec 14 8:00AM</Typography>
+      {categories.map((category) => {
+        return (
+          <Typography className={classes.category} variant="h4">{category.name}</Typography>
+        )
+      })}
+      <Typography variant="h5">{name}</Typography>
+      <Typography variant="body1" noWrap>{content}</Typography>
+      <Typography variant="body1" className={classes.time}>Time: {time}</Typography>
     </Box>
   )
 }

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   Box,
@@ -9,10 +9,10 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-import ItineryListItem from '../Components/Modules/ItineryListItem';
+import ItineraryListItem from '../Components/Modules/ItineraryListItem';
 import AddItemDialog from '../Components/Dialogs/AddItemDialog'
 
-const useStyles = makeStyles(theme=> ({
+const useStyles = makeStyles(theme => ({
   container: {
     padding: "24px",
     height: '90vh',
@@ -38,47 +38,75 @@ const useStyles = makeStyles(theme=> ({
 }))
 
 function ItineraryPage() {
+  const classes = useStyles();
   const { username, itinerary_name } = useParams();
   const [open, setOpen] = useState(false);
-  const classes = useStyles()
+  const [itineraryData, setItineraryData] = useState(null);
+  const [itineraryItems, setItineraryItems] = useState(null);
 
-  function handleClickOpen() {
-    setOpen(true)
+  useEffect(() => {
+    let newItineraryName = itinerary_name.split("-").join("_")
+    fetch(`/itineraries?name=${newItineraryName}`)
+      .then(res => res.json())
+      .then(itineraries => {
+        const itinerary = itineraries.find((itinerary) => {
+          return itinerary.owner === username
+        });
+
+        fetch(`/itineraries/${itinerary.id}`)
+          .then(res => res.json())
+          .then(data => {
+            const newName = data.name.split(" ").map((word) => word[0].toUpperCase() + word.substring(1)).join(" ")
+            data.name = newName;
+            setItineraryData(data)
+            setItineraryItems(data.itinerary_items)
+          })
+      })
+  }, [])
+
+  console.log(itineraryData)
+  function handleAddItemDialog() {
+    setOpen(open => !open)
   }
 
-  function handleClose() {
-    setOpen(false)
-  }
-  
-  return(
-    <Grid container >      
-      <AddItemDialog 
-        handleClose={handleClose} 
-        open={open} 
-      />
+  return (
+    <div>
+      {itineraryData  && itineraryItems && <Grid container >
+        <AddItemDialog
+          handleAddItemDialog={handleAddItemDialog}
+          open={open}
+          setItineraryItems={setItineraryItems}
+          itinerary_id={itineraryData.id}
+        />
 
-      <Grid item xs={12} sm={4} className={classes.container}>
-        <Box bgColor="primary" className={classes.introContainer}>
-          <Typography variant="h3" className={classes.header}>{itinerary_name}</Typography>
-          <Typography variant="body1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nec libero ut libero blandit sollicitudin. </Typography>
-        </Box>
-        
-        <Button variant="outlined" className={classes.addButton} onClick={handleClickOpen}>Add an itinerary item</Button>
-        
-        <Box>
-          <ItineryListItem />
-          <ItineryListItem />
-          <ItineryListItem />
-          <ItineryListItem />
-          <ItineryListItem />
-          <ItineryListItem />
-        </Box>
-      </Grid>
+        <Grid item xs={12} sm={4} className={classes.container}>
+          <Box bgColor="primary" className={classes.introContainer}>
+            <Typography variant="h3" className={classes.header}>{itineraryData.name}</Typography>
+            <Typography variant="body1">{itineraryData.description}</Typography>
+          </Box>
 
-      <Grid item xs={12} sm={8} className={classes.map}>
-        {/* MapBox goes here */}
-      </Grid>
-    </Grid>
+          <Button variant="outlined" className={classes.addButton} onClick={handleAddItemDialog}>Add an itinerary item</Button>
+
+          <Box>
+            {itineraryItems.map((itinerary_item) => {
+              return (
+                <ItineraryListItem 
+                  name={itinerary_item.name}
+                  location={itinerary_item.location}
+                  content={itinerary_item.content}
+                  time={itinerary_item.time}
+                  categories={itinerary_item.categories}
+                />
+              )
+            })}
+          </Box>
+        </Grid>
+
+        <Grid item xs={12} sm={8} className={classes.map}>
+          {/* MapBox goes here */}
+        </Grid>
+      </Grid>}
+    </div>
   )
 }
 

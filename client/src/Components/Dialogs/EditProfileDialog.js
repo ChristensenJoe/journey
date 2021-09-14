@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function EditProfileDialog({ handleClose, open, user}) {
+function EditProfileDialog({ handleChangeEditProfile, open, user, setUser}) {
   const classes = useStyles();
 
   const [profileDataForm, setProfileDataForm] = useState({
@@ -75,7 +75,7 @@ function EditProfileDialog({ handleClose, open, user}) {
   async function handlePatchProfile(e) {
     e.preventDefault()
 
-    const response = await fetch(`/user/${user.id}`, {
+    const response = await fetch(`/users/${user.id}`, {
       method: "PATCH",
       headers: {
           'Content-Type': 'application/json'
@@ -86,6 +86,7 @@ function EditProfileDialog({ handleClose, open, user}) {
         response.json()
         .then(data=>{
           setUser(data)
+          handleChangeEditProfile()
         })
     }
   }
@@ -94,7 +95,7 @@ function EditProfileDialog({ handleClose, open, user}) {
   return(
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={handleChangeEditProfile}
     >
         <Container 
             className={classes.container}

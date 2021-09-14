@@ -43,18 +43,43 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function AddItemDialog({ open, handleClose }) {
+function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary_id }) {
   const classes = useStyles()
+
+  function onAddItem(e) {
+    e.preventDefault();
+
+    /**
+     *  fetch(`/itineraries/${itinerary_id}/itinerary_items`, {
+     *  method: "POST",
+     *  headers: {
+     *  Content-Type: "application/json"
+     * },
+     * body: JSON.stringify()
+     * })
+     * .then(res => res.json())
+     * .then(data => {
+     *  setItineraryItems((itineraryItems) => ({
+     *  ...itineraryItems,
+     * data
+     * }))
+     * })
+     *  
+     *
+     */
+  }
 
   return(
     <Dialog 
       open={open}
-      onClose={handleClose}
+      onClose={handleAddItemDialog}
       
     >
       <Container className={classes.container}>
         <Typography variant="h2" className={classes.header}>Add an itinerary item</Typography>
-        <form>
+        <form
+          onSubmit={onAddItem}
+        >
             <label 
               for="item_name" 
               className={classes.label}
