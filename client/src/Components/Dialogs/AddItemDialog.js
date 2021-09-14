@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme=> ({
   },
   input: {
     display: 'block',
-    width: 'calc(100% - 16px)',
+    width: 'calc(100% - 56px)',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
@@ -32,14 +32,14 @@ const useStyles = makeStyles(theme=> ({
   description: {
     height: '64px',
     display: 'block',
-    width: 'calc(100% - 16px)',
+    width: 'calc(100% - 56px)',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
     marginBottom: '16px'
   },
   submitButton: {
-    width: '100%'
+    width: 'calc(100% - 40px)'
   }
 }))
 
@@ -55,14 +55,56 @@ function AddItemDialog({ open, handleClose }) {
       <Container className={classes.container}>
         <Typography variant="h2" className={classes.header}>Add an itinerary item</Typography>
         <form>
-            <label for="item_name" className={classes.label}>Name of destination</label>
-            <input type="text" name="item_name" className={classes.input} />
-            <label for="content_name" className={classes.label}>Description</label>
-            <input type="text" name="content_name" className={classes.description} />
-            <label for="location_name" className={classes.label}>Location</label>
-            <input type="text" name="location_name" className={classes.input} />
-            <label for="time_name" className={classes.label}>Time</label>
-            <input type="text" name="time_name" className={classes.input} />
+            <label 
+              for="item_name" 
+              className={classes.label}
+            >
+              Name of destination
+            </label>
+            <input 
+              type="text" 
+              name="item_name" 
+              required
+              className={classes.input}
+            />
+
+            <label 
+              for="content_name" 
+              className={classes.label}
+            >
+              Description
+            </label>
+            <input 
+              type="text" 
+              name="content_name" 
+              className={classes.description} 
+            />
+
+            <label 
+              for="location_name" 
+              className={classes.label}
+            >
+              Location
+            </label>
+            <input 
+              type="text" 
+              name="location_name" 
+              required
+              className={classes.input} 
+            />
+            
+            <label 
+              for="time_name" 
+              className={classes.label}
+            >
+              Time
+            </label>
+            <input 
+              type="text" 
+              name="time_name" 
+              required
+              className={classes.input} 
+            />
             <Button 
               variant="contained" 
               type="submit" 

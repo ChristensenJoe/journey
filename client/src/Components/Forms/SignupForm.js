@@ -55,6 +55,7 @@ function SignupForm({ setUser, toggleLogin }) {
   const [createFormData, setCreateFormData] = useState({
     username: "",
     email: "",
+    profile_img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMlFV2F84clnlEDOoIKRjVeg6W17blraNfBcju-B9VV6GxjI2ferZkQJTr6vMI3QlU99I&usqp=CAU",
     password: "",
     password_confirmation: ""
   });

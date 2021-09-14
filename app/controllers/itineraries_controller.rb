@@ -1,9 +1,9 @@
 class ItinerariesController < ApplicationController
+    
     def create 
         itinerary = Itinerary.create!(itinerary_params)
         user_itinerary = UserItinerary.create!({**user_itinerary_params, itinerary_id: itinerary.id})
         render json: itinerary, status: :created
-
     end
 
     private
@@ -15,4 +15,5 @@ class ItinerariesController < ApplicationController
     def user_itinerary_params
         params.permit(:is_owner, :is_favorite, :user_id)
     end
+
 end

@@ -12,6 +12,11 @@ class UsersController < ApplicationController
     render json: @user, status: :accepted
   end
 
+  # def update
+  #   @user.update(user_params)
+  #   render json: @user, status: :accepted
+  # end
+
   private
 
   def user_params

@@ -10,13 +10,14 @@ import {
 } from '@material-ui/core';
 
 import ItineryListItem from '../Components/Modules/ItineryListItem';
-import AddItemDialog from '../Components/Modules/AddItemDialog'
+import AddItemDialog from '../Components/Dialogs/AddItemDialog'
 
 const useStyles = makeStyles(theme=> ({
   container: {
     padding: "24px",
     height: '90vh',
-    overflow: 'auto'
+    overflow: 'auto',
+    boxShadow: '10px 0px 24px #ccc'
   },
   introContainer: {
     padding: '24px',
@@ -51,7 +52,10 @@ function ItineraryPage() {
   
   return(
     <Grid container >      
-      <AddItemDialog handleClose={handleClose} open={open} />
+      <AddItemDialog 
+        handleClose={handleClose} 
+        open={open} 
+      />
 
       <Grid item xs={12} sm={4} className={classes.container}>
         <Box bgColor="primary" className={classes.introContainer}>
