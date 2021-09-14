@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   # Users Controller
   post '/signup', to: 'users#create'
   get '/me', to: 'users#show'
-  # update '/user/:id', to: 'users#update'
+  patch '/user/:id', to: 'users#update'
 
   # Sessions Controller
   post '/login', to: 'sessions#create'

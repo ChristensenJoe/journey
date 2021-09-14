@@ -53,6 +53,7 @@ function App() {
           <Route path="/:username">
             <UserRoutes 
               user={user}
+              setUser={setUser}
             />
           </Route>
           

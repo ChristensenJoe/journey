@@ -84,7 +84,9 @@ function EditProfileDialog({ handleClose, open, user}) {
     })
     if (response.ok) {
         response.json()
-        .then(setProfileDataForm)
+        .then(data=>{
+          setUser(data)
+        })
     }
   }
 

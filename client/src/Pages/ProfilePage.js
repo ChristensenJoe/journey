@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function ProfilePage({ user }) {
+function ProfilePage({ user, setUser }) {
   const classes = useStyles();
 
   const { username } = useParams();
