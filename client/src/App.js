@@ -34,35 +34,36 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <Header 
-          user={user}
-          setUser={setUser}
-        />
-        <Switch>
-          <Route exact path="/login">
-            <Login 
-              setUser={setUser}
-            />
-          </Route>
+      {user &&
+        <Router>
+          <Header 
+            user={user}
+            setUser={setUser}
+          />
+          <Switch>
+            <Route exact path="/login">
+              <Login 
+                setUser={setUser}
+              />
+            </Route>
 
-          <Route path="/search">
-            <SearchPage />
-          </Route>
+            <Route path="/search">
+              <SearchPage />
+            </Route>
 
-          <Route path="/:username">
-            <UserRoutes 
-              user={user}
-              setUser={setUser}
-            />
-          </Route>
-          
-          <Route exact path="/">
-            <Home />
-          </Route>
-        </Switch>
-        <Footer />
-      </Router>
+            <Route path="/:username">
+              <UserRoutes 
+                user={user}
+                setUser={setUser}
+              />
+            </Route>
+            
+            <Route exact path="/">
+              <Home />
+            </Route>
+          </Switch>
+          <Footer />
+      </Router>}
     </ThemeProvider>
   );
 }

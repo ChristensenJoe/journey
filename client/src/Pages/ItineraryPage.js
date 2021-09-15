@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import {
@@ -6,8 +6,12 @@ import {
   Grid,
   Typography,
   Button,
-  makeStyles
+  makeStyles,
+  IconButton
 } from '@material-ui/core';
+
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import ItineraryListItem from '../Components/Modules/ItineraryListItem';
 import AddItemDialog from '../Components/Dialogs/AddItemDialog'
@@ -37,8 +41,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function ItineraryPage() {
+function ItineraryPage({ user, categories }) {
   const classes = useStyles();
+  const history = useHistory();
   const { username, itinerary_name } = useParams();
   const [open, setOpen] = useState(false);
   const [itineraryData, setItineraryData] = useState(null);
@@ -64,9 +69,15 @@ function ItineraryPage() {
       })
   }, [])
 
-  console.log(itineraryData)
   function handleAddItemDialog() {
     setOpen(open => !open)
+  }
+
+  function handleDelete() {
+    fetch(`/itineraries/${itineraryData.id}`, {
+      method: 'DELETE'
+    })
+    history.push(`/${user.username}`)
   }
 
   return (
@@ -75,27 +86,51 @@ function ItineraryPage() {
         <AddItemDialog
           handleAddItemDialog={handleAddItemDialog}
           open={open}
+          itineraryItems={itineraryItems}
           setItineraryItems={setItineraryItems}
           itinerary_id={itineraryData.id}
+          user={user}
+          categories={categories}
         />
 
         <Grid item xs={12} sm={4} className={classes.container}>
-          <Box bgColor="primary" className={classes.introContainer}>
-            <Typography variant="h3" className={classes.header}>{itineraryData.name}</Typography>
-            <Typography variant="body1">{itineraryData.description}</Typography>
+          <Box 
+            className={classes.introContainer}
+          >
+            <Typography 
+              variant="h3" 
+              className={classes.header}
+            >
+              {itineraryData.name}
+            </Typography>
+            <Typography 
+              variant="body1"
+            >
+              {itineraryData.description}
+            </Typography>
+            <IconButton>
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={handleDelete}
+            >
+              <DeleteIcon />
+            </IconButton>
           </Box>
 
           <Button variant="outlined" className={classes.addButton} onClick={handleAddItemDialog}>Add an itinerary item</Button>
 
           <Box>
-            {itineraryItems.map((itinerary_item) => {
+            {itineraryItems.map((itinerary_item, index) => {
               return (
                 <ItineraryListItem 
+                  key={index}
                   name={itinerary_item.name}
                   location={itinerary_item.location}
                   content={itinerary_item.content}
                   time={itinerary_item.time}
                   categories={itinerary_item.categories}
+        
                 />
               )
             })}

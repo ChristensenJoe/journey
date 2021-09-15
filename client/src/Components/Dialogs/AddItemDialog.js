@@ -1,10 +1,15 @@
 import {
+  Box,
   Dialog,
   Button,
+  FormControlLabel,
+  Checkbox,
   Container,
   Typography,
   makeStyles
 } from '@material-ui/core';
+
+import { useState } from 'react';
 
 const useStyles = makeStyles(theme=> ({
   container: {
@@ -23,7 +28,7 @@ const useStyles = makeStyles(theme=> ({
   },
   input: {
     display: 'block',
-    width: 'calc(100% - 56px)',
+    width: 'calc(100% - 16px)',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
@@ -32,48 +37,95 @@ const useStyles = makeStyles(theme=> ({
   description: {
     height: '64px',
     display: 'block',
-    width: 'calc(100% - 56px)',
+    width: 'calc(100% - 16px)',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
     marginBottom: '16px'
   },
+  categoryBox: {
+    margin: '8px 0 24px'
+  },
   submitButton: {
-    width: 'calc(100% - 40px)'
+    width: '100%'
+  },
+  categoryButton: {
+    marginRight: '8px',
+    marginBottom: '8px',
+    backgroundColor: '#f5f5f5'
   }
 }))
 
-function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary_id }) {
+function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary_id, user, categories }) {
   const classes = useStyles()
 
-  function onAddItem(e) {
+  const [newFormData, setNewFormData] = useState({
+    name: "",
+    content: "",
+    location: "",
+    time: "",
+    itinerary_id: user.id
+  })
+  const[selectedCategories, setSelectedCategories] = useState([])
+
+  function handleOnChange(e) {
+    setNewFormData((newFormData)=>({
+      ...newFormData,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  function handleCheckboxChange(e) {
+    if (e.target.checked) {
+      setSelectedCategories((selectedCategories)=>{
+        return [
+          ...selectedCategories,
+          e.target.name
+        ]
+      })
+    } else {
+      setSelectedCategories((selectedCategories)=>{
+        return selectedCategories.filter((category)=>category !== e.target.name)
+      })
+    }
+  }
+
+  async function onAddItem(e) {
     e.preventDefault();
 
-    /**
-     *  fetch(`/itineraries/${itinerary_id}/itinerary_items`, {
-     *  method: "POST",
-     *  headers: {
-     *  Content-Type: "application/json"
-     * },
-     * body: JSON.stringify()
-     * })
-     * .then(res => res.json())
-     * .then(data => {
-     *  setItineraryItems((itineraryItems) => ({
-     *  ...itineraryItems,
-     * data
-     * }))
-     * })
-     *  
-     *
-     */
+    let newItineraryItem = {
+      categories: selectedCategories
+    }
+
+    for (const key in newFormData) {
+      if (newFormData[key] !== "") {
+        newItineraryItem[key] = newFormData[key]
+      }
+    }
+
+    const response = await fetch(`/itineraries/${itinerary_id}/itinerary_items`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newItineraryItem)
+    })
+    if (response.ok) {
+      response.json()
+      .then(data=>{
+        setItineraryItems((itineraryItems)=>([
+          ...itineraryItems,
+          data
+        ]))
+      })
+      handleAddItemDialog((open)=>!open)
+    }
   }
 
   return(
     <Dialog 
       open={open}
       onClose={handleAddItemDialog}
-      
     >
       <Container className={classes.container}>
         <Typography variant="h2" className={classes.header}>Add an itinerary item</Typography>
@@ -81,55 +133,85 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
           onSubmit={onAddItem}
         >
             <label 
-              for="item_name" 
+              for="name" 
               className={classes.label}
             >
               Name of destination
             </label>
             <input 
               type="text" 
-              name="item_name" 
+              name="name" 
+              value={newFormData.name}
               required
               className={classes.input}
+              onChange={handleOnChange}
             />
 
             <label 
-              for="content_name" 
+              for="content" 
               className={classes.label}
             >
               Description
             </label>
             <input 
               type="text" 
-              name="content_name" 
+              name="content" 
+              value={newFormData.content}
               className={classes.description} 
+              onChange={handleOnChange}
             />
 
             <label 
-              for="location_name" 
+              for="location" 
               className={classes.label}
             >
               Location
             </label>
             <input 
               type="text" 
-              name="location_name" 
+              name="location" 
+              value={newFormData.location}
               required
               className={classes.input} 
+              onChange={handleOnChange}
             />
             
             <label 
-              for="time_name" 
+              for="time" 
               className={classes.label}
             >
               Time
             </label>
             <input 
               type="text" 
-              name="time_name" 
+              name="time" 
+              value={newFormData.time}
               required
               className={classes.input} 
+              onChange={handleOnChange}
             />
+
+            <label>
+              Category
+            </label>
+            <Box
+              className={classes.categoryBox}
+            >
+              {categories.map((category)=>{
+                return <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={handleCheckboxChange}
+                      name={category.name}
+                      color="secondary"
+                    />
+                  }
+                  label={category.name}
+                  key={category.id}
+                />
+              })}
+            </Box>
+
             <Button 
               variant="contained" 
               type="submit" 
