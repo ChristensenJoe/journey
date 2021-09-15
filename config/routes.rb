@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   # ItineraryItems Controller
   post '/itineraries/:itinerary_id/itinerary_items', to: 'itinerary_items#create'
+  delete '/itinerary_items/:id', to: 'itinerary_items#destroy'
 
   # Categories Controller
   get '/categories', to: 'categories#index'

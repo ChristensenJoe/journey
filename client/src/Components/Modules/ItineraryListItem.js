@@ -1,8 +1,12 @@
 import {
   Box,
   Typography,
-  makeStyles
+  makeStyles,
+  IconButton
 } from '@material-ui/core';
+
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(theme=> ({  
   container: {
@@ -25,8 +29,17 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function ItineraryListItem({name, location, content, time, categories}) {
+function ItineraryListItem({name, location, content, time, categories, itemID, setItineraryItems, itineraryItems}) {
   const classes=useStyles()
+
+  function handleDelete() {
+    fetch(`/itinerary_items/${itemID}`, {
+      method: "DELETE"
+    })
+    setItineraryItems((itineraryItems) => {
+      return itineraryItems.filter((item) => item.id !== itemID)
+    })
+  }
 
   return(
     <Box className={classes.container}>
@@ -38,6 +51,16 @@ function ItineraryListItem({name, location, content, time, categories}) {
       <Typography variant="h5">{name}</Typography>
       <Typography variant="body1" noWrap>{content}</Typography>
       <Typography variant="body1" className={classes.time}>Time: {time}</Typography>
+      <IconButton 
+        // onClick={handleEditDialog}
+        >
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleDelete}
+        >
+          <DeleteIcon />
+        </IconButton>
     </Box>
   )
 }

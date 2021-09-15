@@ -56,6 +56,7 @@ function ProfilePage({ user, setUser }) {
   function handleEditProfileDialog() {
     setOpenEditProfile((openEditProfile) => !openEditProfile)
   }
+
   
   return(
     <Grid container>

@@ -119,6 +119,14 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
         ]))
       })
       handleAddItemDialog((open)=>!open)
+      setNewFormData({
+        name: "",
+        content: "",
+        location: "",
+        time: "",
+        itinerary_id: user.id
+      })
+      setSelectedCategories([])
     }
   }
 

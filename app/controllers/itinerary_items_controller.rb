@@ -11,6 +11,12 @@ class ItineraryItemsController < ApplicationController
         render json: itinerary_item, status: :created
     end
 
+    def destroy
+        itinerary_item = ItineraryItem.find(params[:id])
+        itinerary_item.destroy
+        head :no_content
+    end
+
     private
 
     def itinerary_item_params

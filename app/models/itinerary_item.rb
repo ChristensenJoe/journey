@@ -1,6 +1,6 @@
 class ItineraryItem < ApplicationRecord
   belongs_to :itinerary
-  has_many :itinerary_item_categories
+  has_many :itinerary_item_categories, dependent: :destroy
   has_many :categories, through: :itinerary_item_categories
 
   validates :name, presence: true

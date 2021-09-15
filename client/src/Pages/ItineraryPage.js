@@ -1,7 +1,6 @@
 import { useParams, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-
 import {
   Box,
   Grid,
@@ -72,6 +71,7 @@ function ItineraryPage({ user, categories }) {
       })
   }, [])
 
+
   function handleAddItemDialog() {
     setOpenAddItem(openAddItem => !openAddItem)
   }
@@ -87,6 +87,7 @@ function ItineraryPage({ user, categories }) {
     setOpenEditItinerary(openEditItinerary => !openEditItinerary)
   }
 
+  
 
   return (
     <div>
@@ -142,12 +143,14 @@ function ItineraryPage({ user, categories }) {
               return (
                 <ItineraryListItem 
                   key={index}
+                  itemID={itinerary_item.id}
                   name={itinerary_item.name}
                   location={itinerary_item.location}
                   content={itinerary_item.content}
                   time={itinerary_item.time}
                   categories={itinerary_item.categories}
-        
+                  setItineraryItems={setItineraryItems}
+                  itineraryItems={itineraryItems}
                 />
               )
             })}
