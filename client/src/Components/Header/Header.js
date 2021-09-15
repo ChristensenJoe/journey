@@ -64,7 +64,11 @@ function Header({ user, setUser }) {
           </Container>
           <Typography variant="h4" color="contrastText" onClick={renderSearchOpen}>Search</Typography>
           {user ? 
-            <Typography variant="h4" color="contrastText" className={classes.headerItems} onClick={logoutUser}>Logout</Typography> :
+            <>
+              <Typography variant="h4" color="contrastText" component={NavLink} to={`/${user.username}`} className={classes.headerItems}>{user.username}</Typography>
+              <Typography variant="h4" color="contrastText" className={classes.headerItems} onClick={logoutUser}>Logout</Typography> 
+            </>  
+              :
             <Typography variant="h4" color="contrastText" component={NavLink} to="/login" className={classes.headerItems}>Login</Typography>
           }
         </Toolbar>

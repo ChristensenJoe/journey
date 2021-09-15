@@ -1,7 +1,7 @@
 class ItineraryItemsController < ApplicationController
     
     def create
-        itinerary = Itinerary.find(params[:itinerary_id])
+        itinerary = Itinerary.find_by(id: params[:itinerary_id])
         itinerary_item = itinerary.itinerary_items.create!(itinerary_item_params)
         params[:categories].each do |category_name|
             category_id = Category.find_by(name: category_name).id
@@ -9,7 +9,6 @@ class ItineraryItemsController < ApplicationController
         end
 
         render json: itinerary_item, status: :created
-
     end
 
     private

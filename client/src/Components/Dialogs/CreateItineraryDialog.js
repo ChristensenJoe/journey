@@ -75,7 +75,6 @@ function CreateItineraryDialog({ handleChangeCreate, open, user }) {
             }
         }
 
-
         const response = await fetch('/itineraries', {
             method: "POST",
             headers: {

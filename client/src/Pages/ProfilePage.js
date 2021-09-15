@@ -12,6 +12,7 @@ import {
 import CreateItineraryDialog from '../Components/Dialogs/CreateItineraryDialog';
 import EditProfileDialog from '../Components/Dialogs/EditProfileDialog';
 import FavoritesListModule from '../Components/Modules/FavoritesListModule';
+import RecentItinerariesModule from '../Components/Modules/RecentItinerariesModule';
 
 const useStyles = makeStyles(theme=> ({
   container: {
@@ -130,9 +131,12 @@ function ProfilePage({ user, setUser }) {
         sm={8}
         className={classes.container}
       >
-        <FavoritesListModule 
+        <RecentItinerariesModule 
           user={user}
         />
+        {/* <FavoritesListModule 
+          user={user}
+        /> */}
       </Grid>
     </Grid>
   )
