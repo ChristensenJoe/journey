@@ -1,5 +1,5 @@
 class Itinerary < ApplicationRecord
-    has_many :user_itineraries
+    has_many :user_itineraries, dependent: :destroy
     has_many :users, through: :user_itineraries
     has_many :itinerary_items, dependent: :destroy
 

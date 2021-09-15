@@ -25,9 +25,15 @@ class ItinerariesController < ApplicationController
         render json: itinerary, status: :created
     end
 
+    def update
+        itinerary = Itinerary.find(params[:id])
+        itinerary.update!(itinerary_params)
+        render json: itinerary, status: :accepted
+    end
+
     def destroy
         itinerary = Itinerary.find!(params[:id])
-        itinerary.destroy
+        Itinerary.destroy(itinerary)
         head :no_content
     end
 

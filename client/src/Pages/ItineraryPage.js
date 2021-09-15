@@ -1,6 +1,7 @@
 import { useParams, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
+
 import {
   Box,
   Grid,
@@ -15,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import ItineraryListItem from '../Components/Modules/ItineraryListItem';
 import AddItemDialog from '../Components/Dialogs/AddItemDialog'
+import EditItineraryDialog from '../Components/Dialogs/EditItineraryDialog';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -45,9 +47,10 @@ function ItineraryPage({ user, categories }) {
   const classes = useStyles();
   const history = useHistory();
   const { username, itinerary_name } = useParams();
-  const [open, setOpen] = useState(false);
+  const [openAddItem, setOpenAddItem] = useState(false);
   const [itineraryData, setItineraryData] = useState(null);
   const [itineraryItems, setItineraryItems] = useState(null);
+  const [openEditItinerary, setOpenEditItinerary] = useState(false)
 
   useEffect(() => {
     let newItineraryName = itinerary_name.split("-").join("_")
@@ -70,7 +73,7 @@ function ItineraryPage({ user, categories }) {
   }, [])
 
   function handleAddItemDialog() {
-    setOpen(open => !open)
+    setOpenAddItem(openAddItem => !openAddItem)
   }
 
   function handleDelete() {
@@ -80,12 +83,24 @@ function ItineraryPage({ user, categories }) {
     history.push(`/${user.username}`)
   }
 
+  function handleEditDialog() {
+    setOpenEditItinerary(openEditItinerary => !openEditItinerary)
+  }
+
+
   return (
     <div>
       {itineraryData  && itineraryItems && <Grid container >
+        <EditItineraryDialog 
+          itineraryData={itineraryData}
+          setItineraryData={setItineraryData}
+          handleEditDialog={handleEditDialog} 
+          open={openEditItinerary}
+          user={user}
+        />
         <AddItemDialog
           handleAddItemDialog={handleAddItemDialog}
-          open={open}
+          open={openAddItem}
           itineraryItems={itineraryItems}
           setItineraryItems={setItineraryItems}
           itinerary_id={itineraryData.id}
@@ -108,7 +123,9 @@ function ItineraryPage({ user, categories }) {
             >
               {itineraryData.description}
             </Typography>
-            <IconButton>
+            <IconButton 
+            onClick={handleEditDialog}
+            >
               <EditIcon />
             </IconButton>
             <IconButton
