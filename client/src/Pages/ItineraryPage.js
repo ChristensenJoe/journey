@@ -75,6 +75,7 @@ function ItineraryPage({ user, categories, setItineraryList }) {
           return itinerary.owner === username
         });
 
+
         fetch(`/itineraries/${itinerary.id}`)
           .then(res => res.json())
           .then(data => {
@@ -108,6 +109,7 @@ function ItineraryPage({ user, categories, setItineraryList }) {
           handleEditDialog={handleEditDialog} 
           open={openEditItinerary}
           user={user}
+          setItineraryList={setItineraryList}
         />
         <AddItemDialog
           handleAddItemDialog={handleAddItemDialog}
@@ -197,7 +199,7 @@ function ItineraryPage({ user, categories, setItineraryList }) {
         <Grid 
           item 
           xs={12} 
-          md={8} 
+          md={8}
           className={classes.map}
         >
           <ItineraryMap 

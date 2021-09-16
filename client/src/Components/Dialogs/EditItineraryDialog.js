@@ -7,7 +7,8 @@ import {
 } from '@material-ui/core'
 
 import { useState } from 'react'
-  
+import { useHistory } from 'react-router-dom';
+
 const useStyles = makeStyles(theme=> ({
 container: {
     width: '50vw',
@@ -49,8 +50,9 @@ submitButton: {
 }
 }))
 
-function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setItineraryData  }) {
+function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setItineraryData, setItineraryList  }) {
     const classes = useStyles();
+    const history = useHistory();
 
     const [itineraryFormData, setItineraryFormData] = useState({
         name: itineraryData.name,
@@ -70,7 +72,7 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
                 if (itineraryFormData[key] !== "" || (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
                     newItinerary[key] = itineraryFormData[key]
                     if(key === "name") {
-                        newItinerary[key] = newItinerary[key].toLowerCase();
+                        newItinerary[key] = newItinerary[key].toLowerCase().trim();
                     }
                 }
             }
@@ -83,9 +85,22 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
         })
         if(response.ok) {
             response.json()
-            .then(newItinerary => {
-                setItineraryData(newItinerary)
+            .then(data => {
+                const pathName = data.name.split(" ").join("-")
+                
+                const newName = data.name.split(" ").map((word) => word[0].toUpperCase() + word.substring(1)).join(" ")
+                data.name = newName;                
+                setItineraryData(data)
                 handleEditDialog()
+                setItineraryList((itineraryList)=>{
+                    const filteredItineraryList = itineraryList.filter((i)=>i.id !== data.id)
+                    
+                    return [
+                        ...filteredItineraryList,
+                        data
+                    ]
+                })
+                history.push(`/${user.username}/${pathName}`)
             })
         }
     }

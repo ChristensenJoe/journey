@@ -10,17 +10,44 @@ import {
 } from 'react-map-gl'
 
 import {
-    IconButton
-  } from '@material-ui/core';
+    Container,
+    Typography,
+    IconButton,
+    makeStyles
+} from '@material-ui/core';
 
-  import LocationOnIcon from '@material-ui/icons/LocationOn';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+
+const useStyles = makeStyles(theme=>({
+    popupContainer: {
+        width: '320px',
+        padding: '24px'
+    },
+    container: {
+        padding: '24px'
+    },
+    category: {
+        padding: '6px 12px',
+        backgroundColor: '#efefef',
+        display: 'inline-block',
+        marginBottom: '6px',
+        marginRight: '6px',
+        borderRadius: '40px'
+    },
+    iconLocation: {
+        width: '40px',
+        height: '40px'
+    }
+}))
 
 function ItineraryMap({itineraryItems}) {
+    const classes = useStyles();
+
     const [viewport, setViewport] = useState({
         latitude: 40.730610,
         longitude: -73.935242,
-        width: '100vw',
-        height: '100vh',
+        width: '67vw',
+        height: '90vh',
         zoom: 12,
     })
     const [selectedItinerary, setSelectedItinerary] = useState(null)
@@ -46,11 +73,11 @@ function ItineraryMap({itineraryItems}) {
         <ReactMapGL
             {...viewport}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+            mapStyle="mapbox://styles/jyk595/cktnkj8al0dcv17qovaj4w3xe"
             onViewportChange={viewport => {
                 setViewport(viewport)
             }}
         >
-            {/* markers here */}
             {itineraryItems.map((itineraryItem) => {
                 const location = itineraryItem.location.split(" ");
                 return (
@@ -60,6 +87,8 @@ function ItineraryMap({itineraryItems}) {
                         longitude={parseFloat(location[1])}
                     > 
                         <IconButton
+                            color="textPrimary"
+                            className={classes.iconLocation}
                             onClick={(e) => {
                                 e.preventDefault()
                                 setSelectedItinerary(() => ({
@@ -69,7 +98,9 @@ function ItineraryMap({itineraryItems}) {
                                 }))
                             }}
                         >
-                            <LocationOnIcon />
+                            <LocationOnIcon 
+                                className={classes.iconLocation}
+                            />
                         </IconButton>
                     </Marker>
                 )
@@ -82,9 +113,40 @@ function ItineraryMap({itineraryItems}) {
                     onClose={() =>{
                         setSelectedItinerary(null)
                     }}
+                    className={classes.popupContainer}
                 >
-                    <div>
-                        {selectedItinerary.name}
+                    <div
+                        classes={classes.container}
+                    >
+                        <Typography
+                            variant="h2"
+                            gutterBottom
+                        >
+                            {selectedItinerary.name}
+                        </Typography>
+
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                        >
+                            {selectedItinerary.content}
+                        </Typography>
+
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                        >
+                            {selectedItinerary.time}
+                        </Typography>
+
+                        {selectedItinerary.categories.map((category)=>{
+                            return <Typography
+                            variant="body1"
+                            className={classes.category}
+                        >
+                            {category.name}
+                        </Typography>
+                        })}
                     </div>
                 </Popup>
             ) : null}

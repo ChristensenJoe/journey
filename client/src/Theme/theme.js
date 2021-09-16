@@ -3,6 +3,10 @@ import {createTheme} from '@material-ui/core'
 const theme = createTheme({
     typography: {
         fontFamily: '"Inter", sans-serif',
+        h1: {
+            fontSize: '64px',
+            fontWeight: '700'
+        },
         h2: {
             fontSize: '24px',
             fontWeight: '500'

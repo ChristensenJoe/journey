@@ -73,7 +73,7 @@ function CreateItineraryDialog({ handleChangeCreate, open, user, setItineraryLis
             if (itineraryFormData[key] !== "" || (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
                 newItinerary[key] = itineraryFormData[key]
                 if(key === "name") {
-                    newItinerary[key] = newItinerary[key].toLowerCase();
+                    newItinerary[key] = newItinerary[key].toLowerCase().trim();
                 }
             }
         }
@@ -165,14 +165,15 @@ function CreateItineraryDialog({ handleChangeCreate, open, user, setItineraryLis
                         className={classes.input} 
                         onChange={handleFormChange}
                     />
-
-                    <input
-                        type="checkbox"
-                        name="is_private"
-                        onChange={handleFormChange}
-                        checked={itineraryFormData.is_private}
-                    />
-                    <label>Make this itinerary public</label>
+                    <div>
+                        <input
+                            type="checkbox"
+                            name="is_private"
+                            onChange={handleFormChange}
+                            checked={itineraryFormData.is_private}
+                        />
+                        <label>Make this itinerary public</label>
+                    </div>
                     <Button 
                         variant="contained" 
                         type="submit" 

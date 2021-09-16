@@ -1,24 +1,22 @@
 import { Link } from "react-router-dom";
-
+import Grow from '@material-ui/core/Grow';
 
 import {
   Box,
-  Grid,
   Typography,
   makeStyles
 } from '@material-ui/core'
 
 const useStyles = makeStyles(theme=>({
-  gridContainer: {
-    backgroundColor: "#f5f5f5",
-    borderRadius: '10px',
+  cardContainer: {
     padding: '24px',
-    textDecoration: 'none',
+    width: 'calc(50% - 64px);',
+    backgroundColor: '#f5f5f5',
     boxShadow: '0px 8px 8px #ddd',
     cursor: 'pointer',
-    flexGrow: 1,
-    justifyContent: 'space-between',
-
+    display: 'inline-block',
+    margin: '8px',
+    textDecoration: 'none'
   },
   cardEmoji: {
     fontSize: '48px',
@@ -38,13 +36,15 @@ function ItineraryCard({ user, itinerary }) {
   const classes = useStyles();
 
   return(
-    <Grid
-      item
-      xs={12}
-      md={6}
-      className={classes.gridContainer}
+    <Grow 
+      in={true}
+      appear={true}
+      timeout={1000}
+    >
+    <Box
       component={Link}
-      to={`/${user.username}/${itinerary.name.split(" ").join("-")}`}
+      to={`/${user.username}/${itinerary.name.toLowerCase().split(" ").join("-")}`}
+      className={classes.cardContainer}
     >
       <Typography
         variant="h3"
@@ -59,16 +59,7 @@ function ItineraryCard({ user, itinerary }) {
         color="textPrimary"
         className={classes.cardHeader}
       >
-        {itinerary.name}
-      </Typography>
-
-      <Typography
-        variant="body1"
-        color="textSecondary"
-        className={classes.cardDescription}
-        nowrap
-      >
-        {itinerary.description}
+        {itinerary.name.split(" ").map((word) => word[0].toUpperCase() + word.substring(1)).join(" ")}
       </Typography>
 
       <Typography
@@ -79,7 +70,8 @@ function ItineraryCard({ user, itinerary }) {
       >
         {itinerary.itinerary_items.length} saved items
       </Typography>
-    </Grid>
+    </Box>
+    </Grow>
   )
 }
 
