@@ -4,6 +4,16 @@ import {
 } from 'react'
 
 import ReactMapGL from 'react-map-gl'
+import {
+    Marker,
+    Popup
+} from 'react-map-gl'
+
+import {
+    IconButton
+  } from '@material-ui/core';
+
+  import LocationOnIcon from '@material-ui/icons/LocationOn';
 
 function ItineraryMap({itineraryItems}) {
     const [viewport, setViewport] = useState({
@@ -13,6 +23,7 @@ function ItineraryMap({itineraryItems}) {
         height: '100vh',
         zoom: 12,
     })
+    const [selectedItinerary, setSelectedItinerary] = useState(null)
 
     useEffect(() => {
         let initialLatitude = 40.730610;
@@ -39,7 +50,45 @@ function ItineraryMap({itineraryItems}) {
                 setViewport(viewport)
             }}
         >
-            markers here
+            {/* markers here */}
+            {itineraryItems.map((itineraryItem) => {
+                const location = itineraryItem.location.split(" ");
+                return (
+                    <Marker
+                        key={itineraryItem.id}
+                        latitude={parseFloat(location[0])}
+                        longitude={parseFloat(location[1])}
+                    > 
+                        <IconButton
+                            onClick={(e) => {
+                                e.preventDefault()
+                                setSelectedItinerary(() => ({
+                                    ...itineraryItem, 
+                                    latitude: parseFloat(location[0]),
+                                    longitude: parseFloat(location[1])
+                                }))
+                            }}
+                        >
+                            <LocationOnIcon />
+                        </IconButton>
+                    </Marker>
+                )
+            })
+            }
+            {selectedItinerary ? (
+                <Popup
+                    latitude={selectedItinerary.latitude}
+                    longitude={selectedItinerary.longitude}
+                    onClose={() =>{
+                        setSelectedItinerary(null)
+                    }}
+                >
+                    <div>
+                        {selectedItinerary.name}
+                    </div>
+                </Popup>
+            ) : null}
+
         </ReactMapGL>
         </div>
     )
