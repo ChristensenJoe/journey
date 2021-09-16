@@ -1,62 +1,55 @@
+import { useState } from 'react'
+
 import {
-  Box,
   Dialog,
-  Button,
-  TextField,
+  Box,
   FormControlLabel,
   Checkbox,
   Container,
   Typography,
+  TextField,
+  Button,
   makeStyles
 } from '@material-ui/core';
 
-import { useState } from 'react';
-
-const useStyles = makeStyles(theme=> ({
+const useStyles = makeStyles(theme=>({
   container: {
     width: '50vw',
     minWidth: '400px',
-    margin: '40px'
+    padding: '40px'
   },
   header: {
-    marginBottom: '32px'
+      marginBottom: '32px'
   },
   label: {
-    display: 'block',
-    marginBottom: theme.spacing(2),
-    textAlign: 'left',
-    fontSize: '14px'
+      display: 'block',
+      marginBottom: theme.spacing(2),
+      textAlign: 'left',
+      fontSize: '14px'
   },
   input: {
-    display: 'block',
-    width: 'calc(100% - 16px)',
-    maxWidth: '490px',
-    backgroundColor: '#efefef',
-    border: 'none',
-    padding: '8px',
-    marginBottom: '16px'
+      display: 'block',
+      width: 'calc(100% - 16px)',
+      maxWidth: '490px',
+      backgroundColor: '#efefef',
+      border: 'none',
+      padding: '8px',
+      marginBottom: '16px'
   },
   description: {
-    height: '64px',
-    display: 'block',
-    width: 'calc(100% - 16px)',
-    maxWidth: '490px',
-    backgroundColor: '#efefef',
-    border: 'none',
-    padding: '8px',
-    marginBottom: '16px'
-  },
-  categoryBox: {
-    margin: '8px 0 24px'
-  },
+      height: '64px',
+      display: 'block',
+      width: 'calc(100% - 16px)',
+      maxWidth: '490px',
+      backgroundColor: '#efefef',
+      border: 'none',
+      padding: '8px',
+      marginBottom: '16px'
+    },
   submitButton: {
-    width: '100%',
-    maxWidth: '506px',
-  },
-  categoryButton: {
-    marginRight: '8px',
-    marginBottom: '8px',
-    backgroundColor: '#f5f5f5'
+      width: '100%',
+      maxWidth: '506px',
+      marginTop: '24px'
   },
   timeField: {
     display:'block',
@@ -69,21 +62,22 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary_id, user, categories }) {
+function EditItemDialog({ open, handleEditDialog, user, itemID, name, location, content, time, categories, allCategories, setItineraryItems }) {
   const classes = useStyles()
-
   const [newFormData, setNewFormData] = useState({
-    name: "",
-    content: "",
-    location: "",
-    time: "2022-01-01T12:00"
+    name: name,
+    content: content,
+    location: location,
+    time: time,
   })
-  const[selectedCategories, setSelectedCategories] = useState([])
+  const[selectedCategories, setSelectedCategories] = useState(categories.map((category)=>category.name))
 
   function handleOnChange(e) {
-    setNewFormData((newFormData)=>({
-      ...newFormData,
-      [e.target.name]: e.target.value
+    const value = (e.target.type === "checkbox" ? e.target.checked : e.target.value)
+
+    setNewFormData((newFormData) => ({
+        ...newFormData,
+        [e.target.name]: value
     }))
   }
 
@@ -102,8 +96,8 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
     }
   }
 
-  async function onAddItem(e) {
-    e.preventDefault();
+  async function patchEditedForm(e) {
+    e.preventDefault()
 
     let newItineraryItem = {
       categories: selectedCategories
@@ -115,50 +109,48 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
       }
     }
 
-    const response = await fetch(`/itineraries/${itinerary_id}/itinerary_items`, {
-      method: "POST",
+    const response = await fetch(`/itinerary_items/${itemID}`, {
+      method: 'PATCH',
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(newItineraryItem)
     })
     if (response.ok) {
       response.json()
-      .then(data=>{
-        setItineraryItems((itineraryItems)=>([
-          ...itineraryItems,
-          data
-        ]))
+      .then(()=>{
+        fetch(`/itinerary_items/${itemID}`)
+        .then(res=>res.json())
+        .then((data)=>{
+          setItineraryItems((itineraryItems)=>{
+            let filteredList = itineraryItems.filter((item)=>item.id !== itemID)
+            
+            return ([
+              ...filteredList,
+              data
+            ])
+          })
+        })
       })
-      handleAddItemDialog((open)=>!open)
-      setNewFormData({
-        name: "",
-        content: "",
-        location: "",
-        time: "2022-01-01T12:00",
-        itinerary_id: user.id
-      })
-      setSelectedCategories([])
+      handleEditDialog((open)=>!open)
     }
   }
 
   return(
-    <Dialog 
+    <Dialog
       open={open}
-      onClose={handleAddItemDialog}
+      onClose={handleEditDialog}
     >
-      <Container 
-        className={classes.container}
-      >
+      <Container className={classes.container}>
         <Typography 
           variant="h2" 
           className={classes.header}
         >
-          Add an itinerary item
+          Edit itinerary item
         </Typography>
         
         <form
-          onSubmit={onAddItem}
+          onSubmit={patchEditedForm}
         >
             <label 
               htmlFor="name" 
@@ -228,11 +220,12 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
             <Box
               className={classes.categoryBox}
             >
-              {categories.map((category)=>{
+              {allCategories.map((category)=>{
                 return <FormControlLabel
                   control={
                     <Checkbox
                       onChange={handleCheckboxChange}
+                      checked={selectedCategories.filter((indCategory)=>indCategory === category.name).length > 0}
                       name={category.name}
                       color="secondary"
                     />
@@ -258,4 +251,4 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
   )
 }
 
-export default AddItemDialog
+export default EditItemDialog;

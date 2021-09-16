@@ -27,6 +27,7 @@ label: {
 input: {
     display: 'block',
     width: 'calc(100% - 16px)',
+    maxWidth: '490px',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
@@ -36,6 +37,7 @@ description: {
     height: '64px',
     display: 'block',
     width: 'calc(100% - 16px)',
+    maxWidth: '490px',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
@@ -43,11 +45,12 @@ description: {
   },
 submitButton: {
     width: '100%',
+    maxWidth: '506px',
     marginTop: '24px'
 }
 }))
 
-function CreateItineraryDialog({ handleChangeCreate, open, user }) {
+function CreateItineraryDialog({ handleChangeCreate, open, user, setItineraryList }) {
     const classes = useStyles();
 
     const [itineraryFormData, setItineraryFormData] = useState({
@@ -85,6 +88,10 @@ function CreateItineraryDialog({ handleChangeCreate, open, user }) {
         if (response.ok) {
             response.json()
                 .then(data => {
+                    setItineraryList((itineraryList)=>[
+                        ...itineraryList,
+                        data
+                    ])
                     history.push(`/${user.username}/${itineraryFormData.name.toLowerCase().split(' ').join("-")}`)
                 })
         }
@@ -107,10 +114,17 @@ function CreateItineraryDialog({ handleChangeCreate, open, user }) {
             <Container 
                 className={classes.container}
             >
-                <Typography variant="h2" className={classes.header}>Add new itinerary</Typography>
-                <form onSubmit={handlePostItinerary}>
+                <Typography 
+                    variant="h2" 
+                    className={classes.header}
+                >
+                    Add new itinerary
+                </Typography>
+                <form 
+                    onSubmit={handlePostItinerary}
+                >
                     <label 
-                        for="name" 
+                        htmlFor="name" 
                         className={classes.label}
                     >
                         Itinerary Name
@@ -125,7 +139,7 @@ function CreateItineraryDialog({ handleChangeCreate, open, user }) {
                     />
 
                     <label 
-                        for="description" 
+                        htmlFor="description" 
                         className={classes.label}
                     >
                         Description
@@ -139,10 +153,10 @@ function CreateItineraryDialog({ handleChangeCreate, open, user }) {
                     />
 
                     <label 
-                        for="category" 
+                        htmlFor="category" 
                         className={classes.label}
                     >
-                        Category
+                        Emoji
                     </label>
                     <input
                         type="text"

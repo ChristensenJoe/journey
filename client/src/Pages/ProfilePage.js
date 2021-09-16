@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import {
   Grid,
@@ -11,7 +11,6 @@ import {
 
 import CreateItineraryDialog from '../Components/Dialogs/CreateItineraryDialog';
 import EditProfileDialog from '../Components/Dialogs/EditProfileDialog';
-import FavoritesListModule from '../Components/Modules/FavoritesListModule';
 import RecentItinerariesModule from '../Components/Modules/RecentItinerariesModule';
 
 const useStyles = makeStyles(theme=> ({
@@ -23,7 +22,8 @@ const useStyles = makeStyles(theme=> ({
     border: '1px solid #ccc',
     borderRadius: '10px',
     textAlign: 'center',
-    marginBottom: '24px'
+    marginBottom: '24px',
+    boxShadow: '0px 0px 10px #ccc'
   },
   profileImg: {
     height: '120px',
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme=> ({
   }
 }))
 
-function ProfilePage({ user, setUser }) {
+function ProfilePage({ user, setUser, itineraryList, setItineraryList }) {
   const classes = useStyles();
 
   const { username } = useParams();
@@ -57,13 +57,14 @@ function ProfilePage({ user, setUser }) {
     setOpenEditProfile((openEditProfile) => !openEditProfile)
   }
 
-  
   return(
-    <Grid container>
+    <div>
+      {user && <Grid container>
       <CreateItineraryDialog 
         handleChangeCreate={handleCreateDialog} 
         open={openCreate}
         user={user}
+        setItineraryList={setItineraryList}
       />
       
       <EditProfileDialog 
@@ -76,7 +77,7 @@ function ProfilePage({ user, setUser }) {
       <Grid 
         item 
         xs={12} 
-        sm={4} 
+        md={4} 
         className={classes.container}
       >
         <Box 
@@ -84,6 +85,7 @@ function ProfilePage({ user, setUser }) {
         >
           <img 
             src={user.profile_img} 
+            alt="profile-img"
             className={classes.profileImg} 
           />
           <Typography 
@@ -105,7 +107,6 @@ function ProfilePage({ user, setUser }) {
             5 saved itineraries
           </Typography>
           {isMyAccount && <Button
-            // color="secondary.light"
             variant="contained"
             disableElevation
             className={classes.editLink}
@@ -128,18 +129,17 @@ function ProfilePage({ user, setUser }) {
 
       <Grid 
         item 
+        md={8}
         xs={12} 
-        sm={8}
         className={classes.container}
       >
-        <RecentItinerariesModule 
-          user={user}
-        />
-        {/* <FavoritesListModule 
-          user={user}
-        /> */}
+      <RecentItinerariesModule 
+        user={user}
+        itineraryList={itineraryList}
+      />
       </Grid>
-    </Grid>
+    </Grid>}
+    </div>
   )
 }
 

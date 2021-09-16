@@ -1,5 +1,5 @@
 import { NavLink, useHistory } from "react-router-dom";
-import { useState } from "react";
+// import { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -22,8 +22,16 @@ const useStyles = makeStyles(theme => ({
   logo: {
     width: '100px'
   },
+  profilePic: {
+    width: '40px',
+    marginLeft: '24px',
+    borderRadius: '50px'
+  },
   headerItems: {
     marginLeft: '24px'
+  },
+  headerProfileName: {
+    marginLeft: '16px'
   },
   searchInput: {
     width: '100%',
@@ -40,11 +48,11 @@ function Header({ user, setUser }) {
   const history = useHistory();
   const classes = useStyles();
   
-  const [searchOpen, setSearchOpen] = useState(false);
+  // const [searchOpen, setSearchOpen] = useState(false);
 
-  function renderSearchOpen() {
-    setSearchOpen(()=>!searchOpen)
-  }
+  // function renderSearchOpen() {
+  //   setSearchOpen(()=>!searchOpen)
+  // }
 
   function logoutUser() {
     fetch("/logout", {
@@ -52,28 +60,80 @@ function Header({ user, setUser }) {
     })
     setUser(false);
     history.push(`/`);
-    console.log("user has been logged out!")
   }
 
   return(
     <>
-      <AppBar color="primary" position="relative" elevation={0}>
-        <Toolbar className={classes.container}>
-          <Container className={classes.flexLogo} component={NavLink} to="/">
-            <img src={logo} alt="journey-logo" className={classes.logo} />
+      <AppBar 
+        color="primary" 
+        position="relative" 
+        elevation={0}
+      >
+        <Toolbar 
+          className={classes.container}
+        >
+          <Container 
+            className={classes.flexLogo} 
+            component={NavLink} 
+            to="/"
+          >
+            <img 
+              src={logo} 
+              alt="journey brand logo"
+              className={classes.logo} 
+            />
           </Container>
-          <Typography variant="h4" color="contrastText" onClick={renderSearchOpen}>Search</Typography>
+          {/* <Typography 
+            variant="h4" 
+            color="contrastText" 
+            onClick={renderSearchOpen}
+          >
+            Search
+          </Typography> */}
+          
           {user ? 
             <>
-              <Typography variant="h4" color="contrastText" component={NavLink} to={`/${user.username}`} className={classes.headerItems}>{user.username}</Typography>
-              <Typography variant="h4" color="contrastText" className={classes.headerItems} onClick={logoutUser}>Logout</Typography> 
+              <img 
+                src={user.profile_img} 
+                alt="user profile"
+                className={classes.profilePic} 
+              />
+              <Typography 
+                variant="h4" 
+                color="contrastText" 
+                component={NavLink} 
+                to={`/${user.username}`} 
+                className={classes.headerProfileName}
+              >
+                {user.username}
+              </Typography>
+              <Typography 
+                variant="h4" 
+                color="contrastText" 
+                className={classes.headerItems} 
+                onClick={logoutUser}
+              >
+                Logout
+              </Typography> 
             </>  
               :
-            <Typography variant="h4" color="contrastText" component={NavLink} to="/login" className={classes.headerItems}>Login</Typography>
+            <Typography 
+              variant="h4" 
+              color="contrastText" 
+              component={NavLink} 
+              to="/login" 
+              className={classes.headerItems}
+            >
+              Login
+            </Typography>
           }
         </Toolbar>
       </AppBar>
-      {searchOpen ? <input type="text" placeholder="Where would you like to go?" className={classes.searchInput} /> : null}
+      {/* {searchOpen ? <input 
+        type="text" 
+        placeholder="Where would you like to go?" 
+        className={classes.searchInput} 
+      /> : null} */}
     </>
   )
 }

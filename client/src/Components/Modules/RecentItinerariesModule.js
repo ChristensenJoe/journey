@@ -1,37 +1,54 @@
 import {
   Box,
   Typography,
+  Grid,
   makeStyles
 } from '@material-ui/core'
 
-import { useState, useEffect } from 'react'
+import ItineraryCard from '../Modules/ItineraryCard';
 
 const useStyles = makeStyles(theme=> ({
+  header: {
+    paddingBottom: '16px',
+    borderBottom: '1px solid black',
+    marginBottom: '24px',
+    gap: '15'
+  },
+  container: {
 
+  }
 }))
 
-function RecentItinerariesModule({ user }){
+function RecentItinerariesModule({ user, itineraryList }){
   const classes = useStyles();
-  const[itineraryList, setItineraryList] = useState([]);
-
-  useEffect(()=>{
-    fetch(`/users/${user.id}/itineraries`)
-    .then(res => res.json())
-    .then((list)=>{
-      setItineraryList(list)
-    })
-  },[])
-
-  console.log(itineraryList);
 
   return(
     <div>
       {itineraryList &&
         <Box>
-        <Typography variant="h2">Recent Itineraries</Typography>
-        {itineraryList.map((itinerary)=>{
-          return (<p key={itinerary.id}>{itinerary.name}</p>)
-        })}
+        <Typography 
+          variant="h2"
+          className={classes.header}
+        >
+          Recent Itineraries
+        </Typography>
+        <div
+          className={classes.divContainer}
+        >
+        <Grid
+          container
+          spacing={2}
+          className={classes.container}
+        >
+          {itineraryList.map((itinerary)=>{
+            return <ItineraryCard 
+              key={itinerary.id}
+              user={user}
+              itinerary={itinerary}
+            />
+          })}
+        </Grid>
+        </div>
       </Box>}
     </div>
   )

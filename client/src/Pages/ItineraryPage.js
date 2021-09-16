@@ -1,4 +1,4 @@
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import {
@@ -7,6 +7,7 @@ import {
   Typography,
   Button,
   makeStyles,
+  useTheme,
   IconButton
 } from '@material-ui/core';
 
@@ -16,6 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ItineraryListItem from '../Components/Modules/ItineraryListItem';
 import AddItemDialog from '../Components/Dialogs/AddItemDialog'
 import EditItineraryDialog from '../Components/Dialogs/EditItineraryDialog';
+import DeleteItineraryConfirmDialog from '../Components/Dialogs/DeleteItineraryConfirmDialog'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -26,8 +28,14 @@ const useStyles = makeStyles(theme => ({
   },
   introContainer: {
     padding: '24px',
-    backgroundColor: '#f5f5f5',
-    marginBottom: '16px'
+    backgroundColor: theme.palette.primary.light,
+    margin: '40px 0 16px',
+    position: 'relative',
+    borderRadius: '10px'
+  },
+  emoji: {
+    fontSize: '80px',
+    marginTop: '-80px'
   },
   map: {
     backgroundImage: `url(https://assets.website-files.com/5e832e12eb7ca02ee9064d42/5f7db426b676b95755fb2844_Group%20805-p-1600.jpeg)`,
@@ -39,17 +47,28 @@ const useStyles = makeStyles(theme => ({
   },
   addButton: {
     width: '100%'
+  },
+  icon: {
+    padding: '6px'
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: '16px',
+    right: '16px'
   }
 }))
 
-function ItineraryPage({ user, categories }) {
-  const classes = useStyles();
-  const history = useHistory();
+function ItineraryPage({ user, categories, setItineraryList }) {
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const { username, itinerary_name } = useParams();
-  const [openAddItem, setOpenAddItem] = useState(false);
   const [itineraryData, setItineraryData] = useState(null);
   const [itineraryItems, setItineraryItems] = useState(null);
-  const [openEditItinerary, setOpenEditItinerary] = useState(false)
+  const [openAddItem, setOpenAddItem] = useState(false);
+  const [openEditItinerary, setOpenEditItinerary] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+
+  const isMyAccount = user.username === username;
 
   useEffect(() => {
     let newItineraryName = itinerary_name.split("-").join("_")
@@ -76,18 +95,13 @@ function ItineraryPage({ user, categories }) {
     setOpenAddItem(openAddItem => !openAddItem)
   }
 
-  function handleDelete() {
-    fetch(`/itineraries/${itineraryData.id}`, {
-      method: 'DELETE'
-    })
-    history.push(`/${user.username}`)
+  function handleOpenDialog() {
+    setOpenConfirmDelete(openConfirmDelete => !openConfirmDelete)
   }
 
   function handleEditDialog() {
     setOpenEditItinerary(openEditItinerary => !openEditItinerary)
   }
-
-  
 
   return (
     <div>
@@ -108,14 +122,32 @@ function ItineraryPage({ user, categories }) {
           user={user}
           categories={categories}
         />
+        <DeleteItineraryConfirmDialog 
+          open={openConfirmDelete}
+          handleOpenDialog={handleOpenDialog}
+          itineraryData={itineraryData}
+          user={user}
+          setItineraryList={setItineraryList}
+        />
 
-        <Grid item xs={12} sm={4} className={classes.container}>
+        <Grid 
+          item 
+          xs={12} 
+          md={4} 
+          className={classes.container}
+        >
           <Box 
             className={classes.introContainer}
           >
+            <Typography
+              className={classes.emoji}
+            >
+              {itineraryData.category}
+            </Typography>
             <Typography 
               variant="h3" 
               className={classes.header}
+              color='textPrimary'
             >
               {itineraryData.name}
             </Typography>
@@ -124,16 +156,23 @@ function ItineraryPage({ user, categories }) {
             >
               {itineraryData.description}
             </Typography>
-            <IconButton 
-            onClick={handleEditDialog}
+            
+            {isMyAccount && <div
+              className={classes.iconContainer}
             >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={handleDelete}
-            >
-              <DeleteIcon />
-            </IconButton>
+              <IconButton 
+                className={classes.icon}
+                onClick={handleEditDialog}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                className={classes.icon}
+                onClick={handleOpenDialog}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </div>}
           </Box>
 
           <Button variant="outlined" className={classes.addButton} onClick={handleAddItemDialog}>Add an itinerary item</Button>
@@ -143,21 +182,28 @@ function ItineraryPage({ user, categories }) {
               return (
                 <ItineraryListItem 
                   key={index}
+                  user={user}
                   itemID={itinerary_item.id}
                   name={itinerary_item.name}
                   location={itinerary_item.location}
                   content={itinerary_item.content}
                   time={itinerary_item.time}
+                  allCategories={categories}
                   categories={itinerary_item.categories}
                   setItineraryItems={setItineraryItems}
-                  itineraryItems={itineraryItems}
+                  isMyAccount={isMyAccount}
                 />
               )
             })}
           </Box>
         </Grid>
 
-        <Grid item xs={12} sm={8} className={classes.map}>
+        <Grid 
+          item 
+          xs={12} 
+          md={8} 
+          className={classes.map}
+        >
           {/* MapBox goes here */}
         </Grid>
       </Grid>}
