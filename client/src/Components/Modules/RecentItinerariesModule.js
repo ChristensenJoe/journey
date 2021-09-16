@@ -37,7 +37,6 @@ function RecentItinerariesModule({ user, itineraryList }){
         >
         <Grid
           container
-          spacing={2}
           className={classes.container}
         >
           {itineraryList.map((itinerary)=>{

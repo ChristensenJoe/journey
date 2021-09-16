@@ -40,10 +40,9 @@ function Footer() {
   const classes = useStyles();
 
   return(
-    <footer>
-      <Container
-        className={classes.container}
-      >
+    <footer
+      className={classes.container}
+    >
         <Grid 
           container
           className={classes.gridContainer}
@@ -153,7 +152,6 @@ function Footer() {
           </div>
         </Grid>
         </Grid>
-      </Container>
     </footer>
   )
 }

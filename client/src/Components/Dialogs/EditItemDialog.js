@@ -67,7 +67,7 @@ function EditItemDialog({ open, handleEditDialog, user, itemID, name, location, 
   const [newFormData, setNewFormData] = useState({
     name: name,
     content: content,
-    location: location,
+    location: "",
     time: time,
   })
   const[selectedCategories, setSelectedCategories] = useState(categories.map((category)=>category.name))
@@ -96,7 +96,7 @@ function EditItemDialog({ open, handleEditDialog, user, itemID, name, location, 
     }
   }
 
-  async function patchEditedForm(e) {
+  function patchEditedForm(e) {
     e.preventDefault()
 
     let newItineraryItem = {
@@ -109,6 +109,21 @@ function EditItemDialog({ open, handleEditDialog, user, itemID, name, location, 
       }
     }
 
+    if (newFormData.location !== "") {
+      const formattedLocation = newFormData.location.split(" ").join("%20");
+
+      fetch(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_TOKEN}&q=${formattedLocation}&format=json`)
+      .then(res => res.json())
+      .then(data => {
+        newItineraryItem.location = `${data[0].lat} ${data[0].lon}`;
+        postItem(newItineraryItem);
+      })
+    } else {
+      postItem(newItineraryItem)
+    }
+  }
+
+  async function postItem(newItineraryItem) {
     const response = await fetch(`/itinerary_items/${itemID}`, {
       method: 'PATCH',
       headers: {
@@ -191,7 +206,6 @@ function EditItemDialog({ open, handleEditDialog, user, itemID, name, location, 
               type="text" 
               name="location" 
               value={newFormData.location}
-              required
               className={classes.input} 
               onChange={handleOnChange}
             />
