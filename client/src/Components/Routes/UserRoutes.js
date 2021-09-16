@@ -9,13 +9,22 @@ import ItineraryPage from '../../Pages/ItineraryPage';
 import AllItinerariesPage from '../../Pages/AllItinerariesPage';
 
 function UserRoutes({ user, setUser }) {
-  const[categories, setCategories] = useState(null)
+  const[categories, setCategories] = useState(null);
+  const[itineraryList, setItineraryList] = useState([]);
 
   useEffect(()=>{
     fetch('/categories')
     .then(res=>res.json())
     .then((data)=>setCategories(data))
   },[]) 
+
+  useEffect(()=>{
+    fetch(`/users/${user.id}/itineraries`)
+    .then(res => res.json())
+    .then((list)=>{
+      setItineraryList(list)
+    })
+  }, []);
 
   return(
     <Switch>
@@ -27,6 +36,8 @@ function UserRoutes({ user, setUser }) {
         <ItineraryPage 
           user={user}
           categories={categories}
+          itineraryList={itineraryList}
+          setItineraryList={setItineraryList}
         />
       </Route>
 
@@ -34,6 +45,8 @@ function UserRoutes({ user, setUser }) {
         <ProfilePage 
           user={user}
           setUser={setUser}
+          itineraryList={itineraryList}
+          setItineraryList={setItineraryList}
         />
       </Route>
     </Switch>

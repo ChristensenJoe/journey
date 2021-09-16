@@ -32,8 +32,8 @@ class ItinerariesController < ApplicationController
     end
 
     def destroy
-        itinerary = Itinerary.find!(params[:id])
-        Itinerary.destroy(itinerary)
+        itinerary = Itinerary.find(params[:id])
+        itinerary.destroy
         head :no_content
     end
 

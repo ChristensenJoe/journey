@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme=> ({
   input: {
       display: 'block',
       width: 'calc(100% - 16px)',
+      maxWidth: '490px',
       backgroundColor: '#efefef',
       border: 'none',
       padding: '8px',
@@ -39,6 +40,7 @@ const useStyles = makeStyles(theme=> ({
       height: '64px',
       display: 'block',
       width: 'calc(100% - 16px)',
+      maxWidth: '490px',
       backgroundColor: '#efefef',
       border: 'none',
       padding: '8px',
@@ -51,6 +53,7 @@ const useStyles = makeStyles(theme=> ({
   },
   submitButton: {
       width: '100%',
+      maxWidth: '506px',
       marginTop: '24px'
   }
 }))
@@ -91,7 +94,6 @@ function EditProfileDialog({ handleChangeEditProfile, open, user, setUser}) {
     }
   }
 
-  console.log(profileDataForm)
   return(
     <Dialog
       open={open}
@@ -100,11 +102,16 @@ function EditProfileDialog({ handleChangeEditProfile, open, user, setUser}) {
         <Container 
             className={classes.container}
         >
-            <Typography variant="h2" className={classes.header}>Edit profile</Typography>
+            <Typography 
+              variant="h2" 
+              className={classes.header}
+            >
+              Edit profile
+            </Typography>
+            
             <form onSubmit={handlePatchProfile}>
-            {/* <form> */}
               <label 
-                  for="username" 
+                  htmlFor="username" 
                   className={classes.label}
               >
                   Username
@@ -117,7 +124,7 @@ function EditProfileDialog({ handleChangeEditProfile, open, user, setUser}) {
               </Typography>
 
               <label 
-                  for="email" 
+                  htmlFor="email" 
                   className={classes.label}
               >
                   Email
@@ -130,7 +137,7 @@ function EditProfileDialog({ handleChangeEditProfile, open, user, setUser}) {
               </Typography>
 
               <label 
-                  for="profile_img" 
+                  htmlFor="profile_img" 
                   className={classes.label}
               >
                   Profile Image
@@ -149,7 +156,7 @@ function EditProfileDialog({ handleChangeEditProfile, open, user, setUser}) {
               />
 
               <label 
-                  for="bio" 
+                  htmlFor="bio" 
                   className={classes.label}
               >
                   Bio

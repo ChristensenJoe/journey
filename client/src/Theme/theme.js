@@ -20,12 +20,16 @@ const theme = createTheme({
             letterSpacing: '1.5px'
         },
         h5: {
-            fontSize: '16px',
+            fontSize: '20px',
             fontWeight: '700',
             marginBottom: '12px'
         },
         body1: {
             fontSize: '14px'
+        },
+        body2: {
+            fontSize: '18px',
+            fontWeight: '700'
         }
     },
     palette: {
@@ -38,6 +42,9 @@ const theme = createTheme({
             main: '#A2B5BA',
             light: '#EFEFEF',
             contrastText: '#000'
+        },
+        text: {
+            primary: '#222'
         }
     },
     spacing: 4

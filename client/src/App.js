@@ -34,7 +34,6 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {user &&
         <Router>
           <Header 
             user={user}
@@ -51,19 +50,21 @@ function App() {
               <SearchPage />
             </Route>
 
-            <Route path="/:username">
+            {user && <Route path="/:username">
               <UserRoutes 
                 user={user}
                 setUser={setUser}
               />
-            </Route>
+            </Route>}
             
             <Route exact path="/">
-              <Home />
+              <Home 
+                user={user}
+              />
             </Route>
           </Switch>
           <Footer />
-      </Router>}
+      </Router>
     </ThemeProvider>
   );
 }

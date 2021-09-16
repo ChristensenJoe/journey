@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core'
 
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
   
 const useStyles = makeStyles(theme=> ({
 container: {
@@ -27,6 +26,7 @@ label: {
 input: {
     display: 'block',
     width: 'calc(100% - 16px)',
+    maxWidth: '490px',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
@@ -36,6 +36,7 @@ description: {
     height: '64px',
     display: 'block',
     width: 'calc(100% - 16px)',
+    maxWidth: '490px',
     backgroundColor: '#efefef',
     border: 'none',
     padding: '8px',
@@ -43,6 +44,7 @@ description: {
   },
 submitButton: {
     width: '100%',
+    maxWidth: '506px',
     marginTop: '24px'
 }
 }))
@@ -56,39 +58,6 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
         category: itineraryData.category,
         is_private: itineraryData.is_private
     })
-
-    const history = useHistory();
-
-    // async function handlePostItinerary(e) {
-    //     e.preventDefault()
-    //     let newItinerary = {
-    //         is_owner: true,
-    //         is_favorite: false,
-    //         user_id: user.id
-    //     }
-    //     for (const key in itineraryFormData) {
-    //         if (itineraryFormData[key] !== "" || (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
-    //             newItinerary[key] = itineraryFormData[key]
-    //             if(key === "name") {
-    //                 newItinerary[key] = newItinerary[key].toLowerCase();
-    //             }
-    //         }
-    //     }
-
-    //     const response = await fetch('/itineraries', {
-    //         method: "POST",
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(newItinerary)
-    //     })
-    //     if (response.ok) {
-    //         response.json()
-    //             .then(data => {
-    //                 history.push(`/${user.username}/${itineraryFormData.name.toLowerCase().split(' ').join("-")}`)
-    //             })
-    //     }
-    // }
 
     async function handlePatchItinerary(e) {
         e.preventDefault()
@@ -121,8 +90,6 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
         }
     }
 
-
-
     function handleFormChange(e) {
         const value = (e.target.type === "checkbox" ? e.target.checked : e.target.value)
 
@@ -141,12 +108,18 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
             <Container 
                 className={classes.container}
             >
-                <Typography variant="h2" className={classes.header}>Edit itinerary</Typography>
+                <Typography 
+                    variant="h2" 
+                    className={classes.header}
+                >
+                    Edit itinerary
+                </Typography>
+                
                 <form 
-                onSubmit={handlePatchItinerary}
+                    onSubmit={handlePatchItinerary}
                 >
                     <label 
-                        for="name" 
+                        htmlFor="name" 
                         className={classes.label}
                     >
                         Itinerary Name
@@ -161,7 +134,7 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
                     />
 
                     <label 
-                        for="description" 
+                        htmlFor="description" 
                         className={classes.label}
                     >
                         Description
@@ -175,10 +148,10 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
                     />
 
                     <label 
-                        for="category" 
+                        htmlFor="category" 
                         className={classes.label}
                     >
-                        Category
+                        Emoji
                     </label>
                     <input
                         type="text"
