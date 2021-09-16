@@ -18,6 +18,7 @@ import ItineraryListItem from '../Components/Modules/ItineraryListItem';
 import AddItemDialog from '../Components/Dialogs/AddItemDialog'
 import EditItineraryDialog from '../Components/Dialogs/EditItineraryDialog';
 import DeleteItineraryConfirmDialog from '../Components/Dialogs/DeleteItineraryConfirmDialog'
+import ItineraryMap from '../Components/Maps/ItineraryMap'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -36,11 +37,6 @@ const useStyles = makeStyles(theme => ({
   emoji: {
     fontSize: '80px',
     marginTop: '-80px'
-  },
-  map: {
-    backgroundImage: `url(https://assets.website-files.com/5e832e12eb7ca02ee9064d42/5f7db426b676b95755fb2844_Group%20805-p-1600.jpeg)`,
-    height: '90vh',
-    backgroundSize: 'auto 100%'
   },
   header: {
     marginBottom: '16px'
@@ -204,7 +200,9 @@ function ItineraryPage({ user, categories, setItineraryList }) {
           md={8} 
           className={classes.map}
         >
-          {/* MapBox goes here */}
+          <ItineraryMap 
+            itineraryItems={itineraryItems}
+          />
         </Grid>
       </Grid>}
     </div>

@@ -12,7 +12,7 @@ import {
 
 import { useState } from 'react';
 
-const useStyles = makeStyles(theme=> ({
+const useStyles = makeStyles(theme => ({
   container: {
     width: '50vw',
     minWidth: '400px',
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme=> ({
     backgroundColor: '#f5f5f5'
   },
   timeField: {
-    display:'block',
+    display: 'block',
     width: '100%',
     marginBottom: '16px',
     "& div": {
@@ -78,10 +78,10 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
     location: "",
     time: "2022-01-01T12:00"
   })
-  const[selectedCategories, setSelectedCategories] = useState([])
+  const [selectedCategories, setSelectedCategories] = useState([])
 
   function handleOnChange(e) {
-    setNewFormData((newFormData)=>({
+    setNewFormData((newFormData) => ({
       ...newFormData,
       [e.target.name]: e.target.value
     }))
@@ -89,24 +89,25 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
 
   function handleCheckboxChange(e) {
     if (e.target.checked) {
-      setSelectedCategories((selectedCategories)=>{
+      setSelectedCategories((selectedCategories) => {
         return [
           ...selectedCategories,
           e.target.name
         ]
       })
     } else {
-      setSelectedCategories((selectedCategories)=>{
-        return selectedCategories.filter((category)=>category !== e.target.name)
+      setSelectedCategories((selectedCategories) => {
+        return selectedCategories.filter((category) => category !== e.target.name)
       })
     }
   }
 
-  async function onAddItem(e) {
+  function onAddItem(e) {
     e.preventDefault();
 
     let newItineraryItem = {
-      categories: selectedCategories
+      categories: selectedCategories,
+      location: ""
     }
 
     for (const key in newFormData) {
@@ -115,22 +116,33 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
       }
     }
 
+    const formattedLocation = newItineraryItem.location.split(" ").join("%20");
+
+    fetch(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_TOKEN}&q=${formattedLocation}&format=json`)
+      .then(res => res.json())
+      .then(data => {
+        newItineraryItem.location = `${data[0].lat} ${data[0].lon}`;
+        postItem(newItineraryItem);
+      })
+  }
+
+  async function postItem(newItineraryItem) {
     const response = await fetch(`/itineraries/${itinerary_id}/itinerary_items`, {
       method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(newItineraryItem)
     })
     if (response.ok) {
       response.json()
-      .then(data=>{
-        setItineraryItems((itineraryItems)=>([
-          ...itineraryItems,
-          data
-        ]))
-      })
-      handleAddItemDialog((open)=>!open)
+        .then(data => {
+          setItineraryItems((itineraryItems) => ([
+            ...itineraryItems,
+            data
+          ]))
+        })
+      handleAddItemDialog((open) => !open)
       setNewFormData({
         name: "",
         content: "",
@@ -142,116 +154,116 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
     }
   }
 
-  return(
-    <Dialog 
+  return (
+    <Dialog
       open={open}
       onClose={handleAddItemDialog}
     >
-      <Container 
+      <Container
         className={classes.container}
       >
-        <Typography 
-          variant="h2" 
+        <Typography
+          variant="h2"
           className={classes.header}
         >
           Add an itinerary item
         </Typography>
-        
+
         <form
           onSubmit={onAddItem}
         >
-            <label 
-              htmlFor="name" 
-              className={classes.label}
-            >
-              Name of destination
-            </label>
-            <input 
-              type="text" 
-              name="name" 
-              value={newFormData.name}
-              required
-              className={classes.input}
-              onChange={handleOnChange}
-            />
+          <label
+            htmlFor="name"
+            className={classes.label}
+          >
+            Name of destination
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={newFormData.name}
+            required
+            className={classes.input}
+            onChange={handleOnChange}
+          />
 
-            <label 
-              htmlFor="content" 
-              className={classes.label}
-            >
-              Description
-            </label>
-            <input 
-              type="text" 
-              name="content" 
-              value={newFormData.content}
-              className={classes.description} 
-              onChange={handleOnChange}
-            />
+          <label
+            htmlFor="content"
+            className={classes.label}
+          >
+            Description
+          </label>
+          <input
+            type="text"
+            name="content"
+            value={newFormData.content}
+            className={classes.description}
+            onChange={handleOnChange}
+          />
 
-            <label 
-              htmlFor="location" 
-              className={classes.label}
-            >
-              Location
-            </label>
-            <input 
-              type="text" 
-              name="location" 
-              value={newFormData.location}
-              required
-              className={classes.input} 
-              onChange={handleOnChange}
-            />
-            
-            <label 
-              htmlFor="time" 
-              className={classes.label}
-            >
-              Time
-            </label>
-            <TextField 
-              type="datetime-local"
-              defaultValue="2022-01-01T12:00"
-              value={newFormData.time}
-              onChange={handleOnChange}
-              required
-              InputLabelProps={{
-                shrink: true,
-              }}
-              className={classes.timeField}
-            />
+          <label
+            htmlFor="location"
+            className={classes.label}
+          >
+            Location
+          </label>
+          <input
+            type="text"
+            name="location"
+            value={newFormData.location}
+            required
+            className={classes.input}
+            onChange={handleOnChange}
+          />
 
-            <label>
-              Category
-            </label>
-            <Box
-              className={classes.categoryBox}
-            >
-              {categories.map((category)=>{
-                return <FormControlLabel
-                  control={
-                    <Checkbox
-                      onChange={handleCheckboxChange}
-                      name={category.name}
-                      color="secondary"
-                    />
-                  }
-                  label={category.name}
-                  key={category.id}
-                />
-              })}
-            </Box>
+          <label
+            htmlFor="time"
+            className={classes.label}
+          >
+            Time
+          </label>
+          <TextField
+            type="datetime-local"
+            defaultValue="2022-01-01T12:00"
+            value={newFormData.time}
+            onChange={handleOnChange}
+            required
+            InputLabelProps={{
+              shrink: true,
+            }}
+            className={classes.timeField}
+          />
 
-            <Button 
-              variant="contained" 
-              type="submit" 
-              color="secondary" 
-              disableElevation 
-              className={classes.submitButton}
-            >
-              Submit
-            </Button>
+          <label>
+            Category
+          </label>
+          <Box
+            className={classes.categoryBox}
+          >
+            {categories.map((category) => {
+              return <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={handleCheckboxChange}
+                    name={category.name}
+                    color="secondary"
+                  />
+                }
+                label={category.name}
+                key={category.id}
+              />
+            })}
+          </Box>
+
+          <Button
+            variant="contained"
+            type="submit"
+            color="secondary"
+            disableElevation
+            className={classes.submitButton}
+          >
+            Submit
+          </Button>
         </form>
       </Container>
     </Dialog>
