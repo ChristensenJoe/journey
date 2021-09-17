@@ -3,54 +3,57 @@ import {
     Container,
     Button,
     Typography,
-    makeStyles
+    makeStyles,
+    IconButton
 } from '@material-ui/core'
+
+import Picker from 'emoji-picker-react'
 
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles(theme=> ({
-container: {
-    width: '50vw',
-    minWidth: '400px',
-    padding: '40px'
-},
-header: {
-    marginBottom: '32px'
-},
-label: {
-    display: 'block',
-    marginBottom: theme.spacing(2),
-    textAlign: 'left',
-    fontSize: '14px'
-},
-input: {
-    display: 'block',
-    width: 'calc(100% - 16px)',
-    maxWidth: '490px',
-    backgroundColor: '#efefef',
-    border: 'none',
-    padding: '8px',
-    marginBottom: '16px'
-},
-description: {
-    height: '64px',
-    display: 'block',
-    width: 'calc(100% - 16px)',
-    maxWidth: '490px',
-    backgroundColor: '#efefef',
-    border: 'none',
-    padding: '8px',
-    marginBottom: '16px'
-  },
-submitButton: {
-    width: '100%',
-    maxWidth: '506px',
-    marginTop: '24px'
-}
+const useStyles = makeStyles(theme => ({
+    container: {
+        width: '50vw',
+        minWidth: '400px',
+        padding: '40px'
+    },
+    header: {
+        marginBottom: '32px'
+    },
+    label: {
+        display: 'block',
+        marginBottom: theme.spacing(2),
+        textAlign: 'left',
+        fontSize: '14px'
+    },
+    input: {
+        display: 'block',
+        width: 'calc(100% - 16px)',
+        maxWidth: '490px',
+        backgroundColor: '#efefef',
+        border: 'none',
+        padding: '8px',
+        marginBottom: '16px'
+    },
+    description: {
+        height: '64px',
+        display: 'block',
+        width: 'calc(100% - 16px)',
+        maxWidth: '490px',
+        backgroundColor: '#efefef',
+        border: 'none',
+        padding: '8px',
+        marginBottom: '16px'
+    },
+    submitButton: {
+        width: '100%',
+        maxWidth: '506px',
+        marginTop: '24px'
+    }
 }))
 
-function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setItineraryData, setItineraryList  }) {
+function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setItineraryData, setItineraryList }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -61,21 +64,23 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
         is_private: itineraryData.is_private
     })
 
+    const [pickerButton, setPickerButton] = useState(false);
+
     async function handlePatchItinerary(e) {
         e.preventDefault()
         let newItinerary = {
             is_owner: true,
             is_favorite: false,
             user_id: user.id
-            }
-            for (const key in itineraryFormData) {
-                if (itineraryFormData[key] !== "" || (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
-                    newItinerary[key] = itineraryFormData[key]
-                    if(key === "name") {
-                        newItinerary[key] = newItinerary[key].toLowerCase().trim();
-                    }
+        }
+        for (const key in itineraryFormData) {
+            if (itineraryFormData[key] !== "" || (itineraryFormData[key].toString() === "true" || itineraryFormData[key].toString() === "false")) {
+                newItinerary[key] = itineraryFormData[key]
+                if (key === "name") {
+                    newItinerary[key] = newItinerary[key].toLowerCase().trim();
                 }
             }
+        }
         const response = await fetch(`/itineraries/${itineraryData.id}`, {
             method: "PATCH",
             headers: {
@@ -83,25 +88,25 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
             },
             body: JSON.stringify(newItinerary)
         })
-        if(response.ok) {
+        if (response.ok) {
             response.json()
-            .then(data => {
-                const pathName = data.name.split(" ").join("-")
-                
-                const newName = data.name.split(" ").map((word) => word[0].toUpperCase() + word.substring(1)).join(" ")
-                data.name = newName;                
-                setItineraryData(data)
-                handleEditDialog()
-                setItineraryList((itineraryList)=>{
-                    const filteredItineraryList = itineraryList.filter((i)=>i.id !== data.id)
-                    
-                    return [
-                        ...filteredItineraryList,
-                        data
-                    ]
+                .then(data => {
+                    const pathName = data.name.split(" ").join("-")
+
+                    const newName = data.name.split(" ").map((word) => word[0].toUpperCase() + word.substring(1)).join(" ")
+                    data.name = newName;
+                    setItineraryData(data)
+                    handleEditDialog()
+                    setItineraryList((itineraryList) => {
+                        const filteredItineraryList = itineraryList.filter((i) => i.id !== data.id)
+
+                        return [
+                            ...filteredItineraryList,
+                            data
+                        ]
+                    })
+                    history.push(`/${user.username}/${pathName}`)
                 })
-                history.push(`/${user.username}/${pathName}`)
-            })
         }
     }
 
@@ -112,29 +117,36 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
             ...itineraryFormData,
             [e.target.name]: value
         }))
-        console.log(itineraryFormData)
+    }
+
+    function handleEmojiChange(e, emojiObject) {
+        setItineraryFormData((itineraryFormData) => ({
+            ...itineraryFormData,
+            category: emojiObject.emoji
+        }))
+        setPickerButton(false)
     }
 
     return (
-        <Dialog 
+        <Dialog
             open={open}
             onClose={handleEditDialog}
         >
-            <Container 
+            <Container
                 className={classes.container}
             >
-                <Typography 
-                    variant="h2" 
+                <Typography
+                    variant="h2"
                     className={classes.header}
                 >
                     Edit itinerary
                 </Typography>
-                
-                <form 
+
+                <form
                     onSubmit={handlePatchItinerary}
                 >
-                    <label 
-                        htmlFor="name" 
+                    <label
+                        htmlFor="name"
                         className={classes.label}
                     >
                         Itinerary Name
@@ -144,12 +156,12 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
                         type="text"
                         value={itineraryFormData.name}
                         required
-                        className={classes.input} 
+                        className={classes.input}
                         onChange={handleFormChange}
                     />
 
-                    <label 
-                        htmlFor="description" 
+                    <label
+                        htmlFor="description"
                         className={classes.label}
                     >
                         Description
@@ -158,23 +170,24 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
                         name="description"
                         type="text"
                         value={itineraryFormData.description}
-                        className={classes.description} 
+                        className={classes.description}
                         onChange={handleFormChange}
                     />
 
-                    <label 
-                        htmlFor="category" 
-                        className={classes.label}
+                    <IconButton
+                        variant="contained"
+                        color="secondary"
+                        className={classes.emojiButton}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setPickerButton((pickerButton) => !pickerButton)
+                        }}
                     >
-                        Emoji
-                    </label>
-                    <input
-                        type="text"
-                        name="category"
-                        value={itineraryFormData.category}
-                        className={classes.input} 
-                        onChange={handleFormChange}
-                    />
+                        {itineraryFormData.category}
+                    </IconButton>
+                    <div className={classes.emojiContainer}>
+                        {pickerButton && <Picker onEmojiClick={handleEmojiChange} />}
+                    </div>
 
                     <input
                         type="checkbox"
@@ -183,11 +196,11 @@ function EditItineraryDialog({ handleEditDialog, open, user, itineraryData, setI
                         checked={itineraryFormData.is_private}
                     />
                     <label>Make this itinerary public</label>
-                    <Button 
-                        variant="contained" 
-                        type="submit" 
-                        color="secondary" 
-                        disableElevation 
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        color="secondary"
+                        disableElevation
                         className={classes.submitButton}
                     >
                         Update Itinerary

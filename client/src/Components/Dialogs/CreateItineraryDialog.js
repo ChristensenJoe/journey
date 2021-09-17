@@ -3,11 +3,15 @@ import {
     Container,
     Button,
     Typography,
-    makeStyles
+    makeStyles,
+    IconButton
 } from '@material-ui/core'
+import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+
+import Picker from 'emoji-picker-react'
   
 const useStyles = makeStyles(theme=> ({
 container: {
@@ -47,6 +51,15 @@ submitButton: {
     width: '100%',
     maxWidth: '506px',
     marginTop: '24px'
+},
+emojiContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+},
+checkbox: {
+    marginTop: '20px'
 }
 }))
 
@@ -59,6 +72,8 @@ function CreateItineraryDialog({ handleChangeCreate, open, user, setItineraryLis
         category: "",
         is_private: false
     })
+
+    const [pickerButton, setPickerButton] = useState(false);
 
     const history = useHistory();
 
@@ -104,6 +119,14 @@ function CreateItineraryDialog({ handleChangeCreate, open, user, setItineraryLis
             ...itineraryFormData,
             [e.target.name]: value
         }))
+    }
+
+    function handleEmojiChange(e, emojiObject) {
+        setItineraryFormData((itineraryFormData) => ({
+            ...itineraryFormData,
+            category: emojiObject.emoji
+        }))
+        setPickerButton(false)
     }
 
     return (
@@ -158,14 +181,23 @@ function CreateItineraryDialog({ handleChangeCreate, open, user, setItineraryLis
                     >
                         Emoji
                     </label>
-                    <input
-                        type="text"
-                        name="category"
-                        value={itineraryFormData.category}
-                        className={classes.input} 
-                        onChange={handleFormChange}
-                    />
-                    <div>
+                    <IconButton 
+                        variant="contained"  
+                        color="secondary" 
+                        className={classes.emojiButton}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setPickerButton((pickerButton) => !pickerButton)
+                        }}
+                    >
+                        {itineraryFormData.category === "" ? <EmojiEmotionsIcon /> : itineraryFormData.category}
+                    </IconButton>
+                    <div className={classes.emojiContainer}>
+                    {pickerButton && <Picker onEmojiClick={handleEmojiChange}/>}
+                    </div>
+                    <div
+                        className={classes.checkbox}
+                    >
                         <input
                             type="checkbox"
                             name="is_private"
