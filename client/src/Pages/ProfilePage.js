@@ -116,7 +116,7 @@ function ProfilePage({ user, setUser, itineraryList, setItineraryList }) {
             variant="body1"
             gutterBottom
           >
-            5 saved itineraries
+            {itineraryList.length} saved itineraries
           </Typography>
           {isMyAccount && <Button
             variant="contained"
