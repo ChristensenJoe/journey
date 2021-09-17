@@ -14,10 +14,10 @@ joe = User.create(username: "Joe", email: "joe@journey.com", password: "password
 john = User.create(username: "John", email: "jyk595@journey@gmail.com", password: "password", profile_img: "https://www.notion.so/cdn-cgi/image/w=2048,q=100/https://images.ctfassets.net/spoqsaf9291f/3sGFch8Vx5vDoyqWW8o3Cm/36b7595092af814de645c897d0654e14/kendall.png")
 
 puts "seeding itineraries"
-Itinerary.create(name: "Mid West -> west coast vibes", description: "a trip", category:"🕴️", is_private: false)
-Itinerary.create(name: "New York", description: "A really cool trip", category:"🕴️", is_private: false)
-Itinerary.create(name: "Mexico", description: "A really cool trip", category:"🕴️", is_private: false)
-Itinerary.create(name: "Hawaii", description: "A really cool trip", category:"🕴️", is_private: false)
+Itinerary.create(name: "west coast vibes", description: "a trip", category:"🕴️", is_private: false)
+Itinerary.create(name: "new york", description: "A really cool trip", category:"🕴️", is_private: false)
+Itinerary.create(name: "mexico", description: "A really cool trip", category:"🕴️", is_private: false)
+Itinerary.create(name: "hawaii", description: "A really cool trip", category:"🕴️", is_private: false)
 
 puts "seeding user_itineraries"
 UserItinerary.create(is_owner: true, is_favorite: false, user_id: demoUser.id, itinerary_id: Itinerary.first.id)
@@ -32,20 +32,20 @@ c = ItineraryItem.create(name: "zion national park", content: "a cool place!", t
 d = ItineraryItem.create(name: "alcatraz, san francisco", content: "a cool place!", time: "4pm", location: "37.828125 -122.422844", itinerary_id: Itinerary.first.id)
 e = ItineraryItem.create(name: "El Capitan", content: "a cool rock!", time: "5pm", location: "37.733952 -119.637756", itinerary_id: Itinerary.first.id)
 # New York
-b = ItineraryItem.create(name: "Statue of liberty", content: "a cool place!", time: "2pm", location: "40.689247, -74.044502", itinerary_id: Itinerary.first.id)
-f = ItineraryItem.create(name: "Empire state building", content: "a cool rock!", time: "5pm", location: "40.748817 -73.985428", itinerary_id: Itinerary.first.id)
-g = ItineraryItem.create(name: "One World Trade Center", content: "a cool rock!", time: "5pm", location: "40.712742 -74.013382", itinerary_id: Itinerary.first.id)
-h = ItineraryItem.create(name: "Museum of Modern Art", content: "a cool rock!", time: "5pm", location: "40.761509 -73.978271", itinerary_id: Itinerary.first.id)
+b = ItineraryItem.create(name: "Statue of liberty", content: "a cool place!", time: "2pm", location: "40.689247, -74.044502", itinerary_id: Itinerary.second.id)
+f = ItineraryItem.create(name: "Empire state building", content: "a cool rock!", time: "5pm", location: "40.748817 -73.985428", itinerary_id: Itinerary.second.id)
+g = ItineraryItem.create(name: "One World Trade Center", content: "a cool rock!", time: "5pm", location: "40.712742 -74.013382", itinerary_id: Itinerary.second.id)
+h = ItineraryItem.create(name: "Museum of Modern Art", content: "a cool rock!", time: "5pm", location: "40.761509 -73.978271", itinerary_id: Itinerary.second.id)
 # Mexico
-i = ItineraryItem.create(name: "Teotihuacán", content: "a cool landmark!", time: "5pm", location: "19.689722 -98.860833", itinerary_id: Itinerary.first.id)
-j = ItineraryItem.create(name: "Xochimilco", content: "a cool tour!", time: "5pm", location: "19.25465 -99.10356", itinerary_id: Itinerary.first.id)
-k = ItineraryItem.create(name: "Grutas de Loltún, Yucatán", content: "a cool rock!", time: "5pm", location: "20.253422 -89.455528", itinerary_id: Itinerary.first.id)
-l = ItineraryItem.create(name: "Iglesia de San Pedro Vaquerias", content: "a cool rock!", time: "5pm", location: "20.378859 -98.571442", itinerary_id: Itinerary.first.id)
+i = ItineraryItem.create(name: "Teotihuacán", content: "a cool landmark!", time: "5pm", location: "19.689722 -98.860833", itinerary_id: Itinerary.third.id)
+j = ItineraryItem.create(name: "Xochimilco", content: "a cool tour!", time: "5pm", location: "19.25465 -99.10356", itinerary_id: Itinerary.third.id)
+k = ItineraryItem.create(name: "Grutas de Loltún, Yucatán", content: "a cool rock!", time: "5pm", location: "20.253422 -89.455528", itinerary_id: Itinerary.third.id)
+l = ItineraryItem.create(name: "Iglesia de San Pedro Vaquerias", content: "a cool rock!", time: "5pm", location: "20.378859 -98.571442", itinerary_id: Itinerary.third.id)
 #hawaii
-m = ItineraryItem.create(name: "Hawaii Volcanoes National Park", content: "a cool rock!", time: "5pm", location: "19.479488 -155.602829", itinerary_id: Itinerary.first.id)
-n = ItineraryItem.create(name: "peral harbour", content: "a cool rock!", time: "5pm", location: "21.339884 -157.970901", itinerary_id: Itinerary.first.id)
-o = ItineraryItem.create(name: "Hanalei Bay", content: "a cool rock!", time: "5pm", location: "22.21 -159.5091667", itinerary_id: Itinerary.first.id)
-pp = ItineraryItem.create(name: "North Shore", content: "a cool rock!", time: "5pm", location: "21.5616589 -158.071598", itinerary_id: Itinerary.first.id)
+m = ItineraryItem.create(name: "Hawaii Volcanoes National Park", content: "a cool rock!", time: "5pm", location: "19.479488 -155.602829", itinerary_id: Itinerary.fourth.id)
+n = ItineraryItem.create(name: "peral harbour", content: "a cool rock!", time: "5pm", location: "21.339884 -157.970901", itinerary_id: Itinerary.fourth.id)
+o = ItineraryItem.create(name: "Hanalei Bay", content: "a cool rock!", time: "5pm", location: "22.21 -159.5091667", itinerary_id: Itinerary.fourth.id)
+pp = ItineraryItem.create(name: "North Shore", content: "a cool rock!", time: "5pm", location: "21.5616589 -158.071598", itinerary_id: Itinerary.fourth.id)
 
 puts "seeding itinerary_item_categories"
 ItineraryItemCategory.create(itinerary_item_id: a.id, category_id: Category.ids.sample)
