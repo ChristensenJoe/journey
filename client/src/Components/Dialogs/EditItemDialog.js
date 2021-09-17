@@ -218,7 +218,8 @@ function EditItemDialog({ open, handleEditDialog, user, itemID, name, location, 
             </label>
             <TextField 
               type="datetime-local"
-              defaultValue="2022-01-01T12:00"
+              name="time"
+              defaultValue={newFormData.time}
               value={newFormData.time}
               onChange={handleOnChange}
               required

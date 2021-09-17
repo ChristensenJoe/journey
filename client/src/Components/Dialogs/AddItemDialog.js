@@ -79,7 +79,7 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
     time: "2022-01-01T12:00"
   })
   const [selectedCategories, setSelectedCategories] = useState([])
-
+  console.log(newFormData);
   function handleOnChange(e) {
     setNewFormData((newFormData) => ({
       ...newFormData,
@@ -223,8 +223,9 @@ function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary
             Time
           </label>
           <TextField
+            name="time"
             type="datetime-local"
-            defaultValue="2022-01-01T12:00"
+            defaultValue={newFormData.time}
             value={newFormData.time}
             onChange={handleOnChange}
             required
