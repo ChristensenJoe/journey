@@ -10,7 +10,7 @@ import AllItinerariesPage from '../../Pages/AllItinerariesPage';
 
 function UserRoutes({ user, setUser }) {
   const[categories, setCategories] = useState(null);
-  const[itineraryList, setItineraryList] = useState([]);
+  const[itineraryList, setItineraryList] = useState(null);
 
   useEffect(()=>{
     fetch('/categories')

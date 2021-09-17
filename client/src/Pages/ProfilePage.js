@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   Grid,
   Box,
+  Container,
   Typography,
   Button,
   makeStyles
@@ -12,6 +13,7 @@ import {
 import CreateItineraryDialog from '../Components/Dialogs/CreateItineraryDialog';
 import EditProfileDialog from '../Components/Dialogs/EditProfileDialog';
 import RecentItinerariesModule from '../Components/Modules/RecentItinerariesModule';
+import loadingGif from '../Images/loading.gif';
 
 const useStyles = makeStyles(theme=> ({
   container: {
@@ -38,6 +40,15 @@ const useStyles = makeStyles(theme=> ({
     marginTop: '24px',
     width: '100%',
     backgroundColor: '#efefef'
+  },
+  loadingContainer: {
+    width: '100%',
+    textAlign: 'center'
+  },
+  loading: {
+    margin: '0 auto',
+    paddingTop: '20vh',
+    width: '15vw'
   }
 }))
 
@@ -59,7 +70,8 @@ function ProfilePage({ user, setUser, itineraryList, setItineraryList }) {
 
   return(
     <div>
-      {user && <Grid container>
+      {user && itineraryList ? 
+      <Grid container>
       <CreateItineraryDialog 
         handleChangeCreate={handleCreateDialog} 
         open={openCreate}
@@ -138,7 +150,18 @@ function ProfilePage({ user, setUser, itineraryList, setItineraryList }) {
         itineraryList={itineraryList}
       />
       </Grid>
-    </Grid>}
+    </Grid> : 
+      <Container
+        className={classes.loadingContainer}
+      >
+        <img 
+          src={loadingGif}
+          alt="loading gif"
+          className={classes.loading}
+        />
+      </Container>
+      
+    }
     </div>
   )
 }

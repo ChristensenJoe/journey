@@ -13,6 +13,7 @@ import {
     Container,
     Typography,
     IconButton,
+    useTheme,
     makeStyles
 } from '@material-ui/core';
 
@@ -41,14 +42,16 @@ const useStyles = makeStyles(theme=>({
 }))
 
 function ItineraryMap({itineraryItems}) {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles(theme);
 
     const [viewport, setViewport] = useState({
         latitude: 40.730610,
         longitude: -73.935242,
-        width: '67vw',
+        width: '100%',
         height: '90vh',
-        zoom: 12,
+
+        zoom: 12
     })
     const [selectedItinerary, setSelectedItinerary] = useState(null)
 
