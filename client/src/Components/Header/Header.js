@@ -1,9 +1,8 @@
 import { NavLink, useHistory } from "react-router-dom";
-// import { useState } from "react";
 import {
   AppBar,
   Toolbar,
-  Container,
+  Box,
   Typography,
   makeStyles
 } from '@material-ui/core'
@@ -47,12 +46,6 @@ const useStyles = makeStyles(theme => ({
 function Header({ user, setUser }) {
   const history = useHistory();
   const classes = useStyles();
-  
-  // const [searchOpen, setSearchOpen] = useState(false);
-
-  // function renderSearchOpen() {
-  //   setSearchOpen(()=>!searchOpen)
-  // }
 
   function logoutUser() {
     fetch("/logout", {
@@ -72,7 +65,7 @@ function Header({ user, setUser }) {
         <Toolbar 
           className={classes.container}
         >
-          <Container 
+          <Box 
             className={classes.flexLogo} 
             component={NavLink} 
             to="/"
@@ -82,15 +75,7 @@ function Header({ user, setUser }) {
               alt="journey brand logo"
               className={classes.logo} 
             />
-          </Container>
-          {/* <Typography 
-            variant="h4" 
-            color="contrastText" 
-            onClick={renderSearchOpen}
-          >
-            Search
-          </Typography> */}
-          
+          </Box>          
           {user ? 
             <>
               <img 
@@ -129,11 +114,6 @@ function Header({ user, setUser }) {
           }
         </Toolbar>
       </AppBar>
-      {/* {searchOpen ? <input 
-        type="text" 
-        placeholder="Where would you like to go?" 
-        className={classes.searchInput} 
-      /> : null} */}
     </>
   )
 }

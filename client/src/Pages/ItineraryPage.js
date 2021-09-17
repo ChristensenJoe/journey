@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
+  Container,
   Typography,
   Button,
   makeStyles,
@@ -17,15 +18,28 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ItineraryListItem from '../Components/Modules/ItineraryListItem';
 import AddItemDialog from '../Components/Dialogs/AddItemDialog'
 import EditItineraryDialog from '../Components/Dialogs/EditItineraryDialog';
-import DeleteItineraryConfirmDialog from '../Components/Dialogs/DeleteItineraryConfirmDialog'
-import ItineraryMap from '../Components/Maps/ItineraryMap'
+import DeleteItineraryConfirmDialog from '../Components/Dialogs/DeleteItineraryConfirmDialog';
+import ItineraryMap from '../Components/Maps/ItineraryMap';
+import loadingGif from '../Images/loading.gif';
 
 const useStyles = makeStyles(theme => ({
+  loadingContainer: {
+    width: '100%',
+    textAlign: 'center'
+  },
+  loading: {
+    margin: '0 auto',
+    paddingTop: '20vh',
+    width: '15vw'
+  },
   container: {
     padding: "24px",
     height: '90vh',
     overflow: 'auto',
-    boxShadow: '10px 0px 24px #ccc'
+    boxShadow: '10px 0px 24px #ccc',
+    [theme.breakpoints.down('sm')]: {
+       height: 'auto'
+    }
   },
   introContainer: {
     padding: '24px',
@@ -102,7 +116,8 @@ function ItineraryPage({ user, categories, setItineraryList }) {
 
   return (
     <div>
-      {itineraryData  && itineraryItems && <Grid container >
+      {itineraryData  && itineraryItems ? 
+      <Grid container >
         <EditItineraryDialog 
           itineraryData={itineraryData}
           setItineraryData={setItineraryData}
@@ -206,7 +221,16 @@ function ItineraryPage({ user, categories, setItineraryList }) {
             itineraryItems={itineraryItems}
           />
         </Grid>
-      </Grid>}
+      </Grid> : 
+      <Container
+        className={classes.loadingContainer}
+      >
+        <img 
+          src={loadingGif}
+          alt="loading gif"
+          className={classes.loading}
+        />
+      </Container>}
     </div>
   )
 }

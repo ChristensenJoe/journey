@@ -9,14 +9,17 @@ import logo from '../../Images/journey-logo.png'
 
 const useStyles = makeStyles(theme=>({
   container: {
-    padding: '40px',
+    padding: ' 0 40px 40px',
   },
   gridContainer: {
-    borderTop: '.5px solid #ccc',
     paddingTop: '64px'
   },
   logoImg: {
-    width: '50%'
+    width: '50%',
+    [theme.breakpoints.down('sm')]: {
+       width: '33%',
+       marginBottom: '40px'
+    }
   },
   nameSection: {
     marginBottom: '40px'
@@ -41,6 +44,7 @@ function Footer() {
 
   return(
     <footer
+    id="footer"
       className={classes.container}
     >
         <Grid 

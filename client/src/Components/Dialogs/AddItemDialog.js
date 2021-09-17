@@ -7,6 +7,7 @@ import {
   Checkbox,
   Container,
   Typography,
+  useTheme,
   makeStyles
 } from '@material-ui/core';
 
@@ -56,7 +57,6 @@ const useStyles = makeStyles(theme => ({
   categoryButton: {
     marginRight: '8px',
     marginBottom: '8px',
-    backgroundColor: '#f5f5f5'
   },
   timeField: {
     display: 'block',
@@ -70,7 +70,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function AddItemDialog({ open, handleAddItemDialog, setItineraryItems, itinerary_id, user, categories }) {
-  const classes = useStyles()
+  const theme = useTheme();
+  const classes = useStyles(theme);
 
   const [newFormData, setNewFormData] = useState({
     name: "",
